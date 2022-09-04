@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS2", "PS2\PS2.csproj", "{64746A01-7FD6-4903-AB41-AC8A632D9592}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64746A01-7FD6-4903-AB41-AC8A632D9592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64746A01-7FD6-4903-AB41-AC8A632D9592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64746A01-7FD6-4903-AB41-AC8A632D9592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64746A01-7FD6-4903-AB41-AC8A632D9592}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E5D4F55-A0D7-413C-BC0F-2A9FA5380BEF}
+	EndGlobalSection
+EndGlobal
