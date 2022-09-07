@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
-using System.Windows;
 using System.Windows.Forms;
 
 namespace PS2.Utilities
@@ -24,18 +23,21 @@ namespace PS2.Utilities
             }
         }
 
-        public string GetJsonString<T>(T data) { 
+        public string GetJsonString<T>(T data)
+        {
             return JsonConvert.SerializeObject(data);
         }
         public T GetObjectFromJsonString<T>(string jsonString)
         {
-            try {
+            try
+            {
                 return JsonConvert.DeserializeObject<T>(jsonString);
             }
-            catch (JsonReaderException e) {
-                System.Windows.Forms.MessageBox.Show(e.Message,"Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (JsonReaderException e)
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            return default;              
+            return default;
         }
     }
 }

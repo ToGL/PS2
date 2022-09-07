@@ -1,13 +1,4 @@
-﻿using Microsoft.Win32;
-using PS2.Utilities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
 namespace PS2
@@ -21,8 +12,8 @@ namespace PS2
                 this.mainClientTextBox.Text = PsMMainForm._settings.MainLineageClientPath;
             if (!string.IsNullOrEmpty(PsMMainForm._settings.AlternativeLineageClientPath))
                 this.altClientTextBox.Text = PsMMainForm._settings.AlternativeLineageClientPath;
-            
-            this.loadToCharacter.Checked = PsMMainForm._settings.LoginUpToCharacter ? PsMMainForm._settings.LoginUpToCharacter :  false;
+
+            this.loadToCharacter.Checked = PsMMainForm._settings.LoginUpToCharacter ? PsMMainForm._settings.LoginUpToCharacter : false;
             this.checkBoxSetTitleClient.Checked = PsMMainForm._settings.RenameClientWindow ? PsMMainForm._settings.RenameClientWindow : false;
         }
 
@@ -35,7 +26,7 @@ namespace PS2
 
             this.mainClientTextBox.Text = this.openFileDialog1.FileName;
             PsMMainForm._settings.MainLineageClientPath = this.openFileDialog1.FileName;
-            if(!string.IsNullOrEmpty(this.mainClientTextBox.Text))
+            if (!string.IsNullOrEmpty(this.mainClientTextBox.Text))
                 PsMMainForm.isClientSet = true;
         }
 
@@ -46,15 +37,18 @@ namespace PS2
                 return;
             }
 
-            
-            if (string.IsNullOrEmpty(this.openFileDialog1.FileName) 
-                && !string.IsNullOrEmpty(PsMMainForm._settings.MainLineageClientPath)) {
-                PsMMainForm._settings.AlternativeLineageClientPath = PsMMainForm._settings.MainLineageClientPath;            }
-            else {
+
+            if (string.IsNullOrEmpty(this.openFileDialog1.FileName)
+                && !string.IsNullOrEmpty(PsMMainForm._settings.MainLineageClientPath))
+            {
+                PsMMainForm._settings.AlternativeLineageClientPath = PsMMainForm._settings.MainLineageClientPath;
+            }
+            else
+            {
                 PsMMainForm._settings.AlternativeLineageClientPath = this.openFileDialog1.FileName;
             }
             this.altClientTextBox.Text = PsMMainForm._settings.AlternativeLineageClientPath;
-           
+
             if (!string.IsNullOrEmpty(this.altClientTextBox.Text))
                 PsMMainForm.isClientSet = true;
         }
@@ -73,7 +67,7 @@ namespace PS2
                 return;
             }
 
-            if(!string.IsNullOrEmpty(this.mainClientTextBox.Text))
+            if (!string.IsNullOrEmpty(this.mainClientTextBox.Text))
                 PsMMainForm._settings.MainLineageClientPath = this.mainClientTextBox.Text;
             if (!string.IsNullOrEmpty(this.altClientTextBox.Text))
                 PsMMainForm._settings.AlternativeLineageClientPath = this.altClientTextBox.Text;
@@ -87,9 +81,9 @@ namespace PS2
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if(this.checkBoxSetTitleClient.Checked)
+            if (this.checkBoxSetTitleClient.Checked)
                 MessageBox.Show(Strings.WindowTitleInfo, "Info");
-            
+
             PsMMainForm._settings.RenameClientWindow = this.checkBoxSetTitleClient.Checked;
         }
 

@@ -1,17 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace PS2
 {
-    public class Account
+    public class Account : INotifyPropertyChanged
     {
         //Name thats display in list
         [JsonProperty(Order = 3)]
@@ -26,7 +21,7 @@ namespace PS2
         [JsonProperty(Order = 1)]
         public string GameAccount { get { return gameAccount; } set { gameAccount = value; } }
         private string gameAccount;
-       
+
         [JsonProperty(Order = 2)]
         public string GamePassword { get { return gamePassword; } set { gamePassword = value; } }
         private string gamePassword;
@@ -39,28 +34,38 @@ namespace PS2
         [JsonProperty(Order = 6)]
         public bool useAlternativeClientPath = false;
 
-        static internal List<Account> GetAccounts() {
+        static internal List<Account> GetAccounts()
+        {
             if (Account.AllAccounts.Count == 0)
                 Account.AllAccounts = Account.InitializeAccounts();
             return Account.AllAccounts;
         }
         static private List<Account> AllAccounts = new List<Account>();
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        static private List<Account> InitializeAccounts() {
-            List<Account> accounts = new List<Account> ();
-    
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        static private List<Account> InitializeAccounts()
+        {
+            List<Account> accounts = new List<Account>();
+
             return accounts;
         }
 
         public Account() { }
-        public Account(string displayName) { 
+        public Account(string displayName)
+        {
             this.displayName = displayName;
             this.description = "empty descrition";
             this.occupation = "Not set";
         }
 
-        public Account(string displayName,  string description) {
+        public Account(string displayName, string description)
+        {
             this.displayName = displayName;
             this.description = description;
             this.occupation = "Not set";
@@ -73,9 +78,9 @@ namespace PS2
             this.occupation = occupation;
         }
 
-        public Account(string login, string password, string name, 
+        public Account(string login, string password, string name,
                 string description, string occupation, bool useAltClient)
-        { 
+        {
             this.gameAccount = login;
             this.gamePassword = password;
             this.displayName = name;
@@ -83,11 +88,11 @@ namespace PS2
             this.occupation = occupation;
             this.useAlternativeClientPath = useAltClient;
         }
-        
+
 
         public override string ToString()
         {
-            return "Name:\t\t"+ this.Name + "\n" +
+            return "Name:\t\t" + this.Name + "\n" +
                    "Occupation:\t " + this.Occupation + "\n" +
                    "Description: \t" + this.Description;
         }
@@ -107,5 +112,5 @@ namespace PS2
         }
     }
 
-    
+
 }

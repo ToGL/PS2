@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PS2
@@ -17,18 +11,19 @@ namespace PS2
         InputLanguage original;
         public AddEditForm()
         {
-           
+
             InitializeComponent();
             occupationComboBox.SelectedIndex = 0;
         }
 
-        public AddEditForm(Account toEdit) {
+        public AddEditForm(Account toEdit)
+        {
             InitializeComponent();
             GameLoginTextBox.Text = toEdit.GameAccount;
             GamePasswordTextBox.Text = toEdit.GamePassword;
             DisplayNameTextBox.Text = toEdit.Name;
 
-            if(!string.IsNullOrEmpty(toEdit.Description))
+            if (!string.IsNullOrEmpty(toEdit.Description))
                 DescriptionTextBox.Text = toEdit.Description;
             else
             {
@@ -81,8 +76,8 @@ namespace PS2
                 );
 
             editAccounts.Add(acc);
-
-           this.Close();
+            
+            this.Close();
         }
 
         private void GameLoginTextBox_Enter(object sender, EventArgs e)
@@ -115,11 +110,13 @@ namespace PS2
             rollbackInputToOrigin();
         }
 
-        private void setEUForInput() {
+        private void setEUForInput()
+        {
             original = InputLanguage.CurrentInputLanguage;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(new CultureInfo("en-us"));
         }
-        private void rollbackInputToOrigin() {
+        private void rollbackInputToOrigin()
+        {
             InputLanguage.CurrentInputLanguage = original;
         }
     }

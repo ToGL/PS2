@@ -93,16 +93,6 @@ namespace PS2.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap export_icon_128492 {
-            get {
-                object obj = ResourceManager.GetObject("export_icon_128492", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap import_download_icon_176152 {
             get {
                 object obj = ResourceManager.GetObject("import_download_icon_176152", resourceCulture);

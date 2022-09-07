@@ -35,6 +35,7 @@ namespace PS2
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PsMMainForm));
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.altClientcolumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnOccupation = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumndescription = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -72,11 +73,13 @@ namespace PS2
             // 
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnName);
+            this.objectListView1.AllColumns.Add(this.altClientcolumn);
             this.objectListView1.AllColumns.Add(this.olvColumnOccupation);
             this.objectListView1.AllColumns.Add(this.olvColumndescription);
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
+            this.altClientcolumn,
             this.olvColumnOccupation,
             this.olvColumndescription});
             this.objectListView1.ContextMenuStrip = this.contextMenuStrip1;
@@ -92,10 +95,10 @@ namespace PS2
             this.objectListView1.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.objectListView1.SelectedForeColor = System.Drawing.Color.Black;
             this.objectListView1.ShowCommandMenuOnRightClick = true;
-            this.objectListView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.UseFiltering = true;
             this.objectListView1.UseHotControls = false;
+            this.objectListView1.UseNotifyPropertyChanged = true;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.objectListView1_CellRightClick);
             this.objectListView1.DoubleClick += new System.EventHandler(this.objectListView1_DoubleClick);
@@ -113,6 +116,18 @@ namespace PS2
             resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.UseFiltering = false;
             this.olvColumnName.UseInitialLetterForGroup = true;
+            // 
+            // altClientcolumn
+            // 
+            this.altClientcolumn.AspectName = "useAlternativeClientPath";
+            this.altClientcolumn.AutoCompleteEditor = false;
+            this.altClientcolumn.AutoCompleteEditorMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.altClientcolumn.CheckBoxes = true;
+            this.altClientcolumn.Groupable = false;
+            this.altClientcolumn.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.altClientcolumn.Searchable = false;
+            resources.ApplyResources(this.altClientcolumn, "altClientcolumn");
+            this.altClientcolumn.WordWrap = true;
             // 
             // olvColumnOccupation
             // 
@@ -344,6 +359,7 @@ namespace PS2
 
         private ObjectListView objectListView1;
         private OLVColumn olvColumnName;
+        private OLVColumn altClientcolumn;
         private OLVColumn olvColumnOccupation;
         private OLVColumn olvColumndescription;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -372,6 +388,7 @@ namespace PS2
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox langComBox;
         private System.Windows.Forms.TextBox searchTextBox;
+        
     }
 }
 

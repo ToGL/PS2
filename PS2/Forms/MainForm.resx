@@ -128,6 +128,15 @@
   <data name="olvColumnName.Width" type="System.Int32, mscorlib">
     <value>140</value>
   </data>
+  <data name="altClientcolumn.Text" xml:space="preserve">
+    <value>ALT</value>
+  </data>
+  <data name="altClientcolumn.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="altClientcolumn.ToolTipText" xml:space="preserve">
+    <value>Use Alternative client if checked</value>
+  </data>
   <data name="olvColumnOccupation.Text" xml:space="preserve">
     <value>Occupation</value>
   </data>
@@ -569,6 +578,12 @@
     <value>olvColumnName</value>
   </data>
   <data name="&gt;&gt;olvColumnName.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;altClientcolumn.Name" xml:space="preserve">
+    <value>altClientcolumn</value>
+  </data>
+  <data name="&gt;&gt;altClientcolumn.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;olvColumnOccupation.Name" xml:space="preserve">
