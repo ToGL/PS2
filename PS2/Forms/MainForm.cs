@@ -311,10 +311,10 @@ namespace PS2
                     if (_accounts.Contains(acc))
                     {
                         _accounts.Remove(acc);
-                        
+                        objectListView1.UpdateObject(acc);
                     }
                     _accounts.Add(acc);
-                    objectListView1.UpdateObject(acc);
+                    objectListView1.AddObject(acc);
                 }
 
                 objectListView1.RefreshObjects(_accounts);
@@ -399,9 +399,9 @@ namespace PS2
             while (GetForegroundWindow() != handle) {
                 Thread.Sleep(1000);
             }
-                    //turn off capslock
-                    if (IsKeyLocked(Keys.CapsLock))
-                    {
+            //turn off capslock
+            if (IsKeyLocked(Keys.CapsLock))
+            {
                         const int KEYEVENTF_EXTENDEDKEY = 0x1;
                         const int KEYEVENTF_KEYUP = 0x2;
                         keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
@@ -418,7 +418,7 @@ namespace PS2
 
                 if (SetForegroundWindow(handle)){
                     SendKeys.SendWait(LoginToEnter);
-            }
+                }
                    
                     Thread.Sleep(100);
                 SendKeys.SendWait("\t");
