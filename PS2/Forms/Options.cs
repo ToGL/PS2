@@ -14,7 +14,7 @@ namespace PS2
                 this.altClientTextBox.Text = PsMMainForm._settings.AlternativeLineageClientPath;
 
             this.loadToCharacter.Checked = PsMMainForm._settings.LoginUpToCharacter ? PsMMainForm._settings.LoginUpToCharacter : false;
-            this.checkBoxSetTitleClient.Checked = PsMMainForm._settings.RenameClientWindow ? PsMMainForm._settings.RenameClientWindow : false;
+            this.checkBoxSetTitleClient.Checked = true; //PsMMainForm._settings.RenameClientWindow ? PsMMainForm._settings.RenameClientWindow : false;
         }
 
         private void mainClientPathButton_Click(object sender, EventArgs e)
@@ -72,7 +72,7 @@ namespace PS2
             if (!string.IsNullOrEmpty(this.altClientTextBox.Text))
                 PsMMainForm._settings.AlternativeLineageClientPath = this.altClientTextBox.Text;
 
-            PsMMainForm._settings.RenameClientWindow = this.checkBoxSetTitleClient.Checked;
+            PsMMainForm._settings.RenameClientWindow = true; //this.checkBoxSetTitleClient.Checked;
             PsMMainForm._settings.LoginUpToCharacter = this.loadToCharacter.Checked;
 
             PsMMainForm._jsonFileUtility.SaveFile(PsMMainForm._settingsPath, PsMMainForm._settings);

@@ -6,7 +6,7 @@
         public string MainLineageClientPath { get; set; }
         public string AlternativeLineageClientPath { get; set; }
 
-        public bool RenameClientWindow { get; set; }
+        public bool RenameClientWindow { get; set; } = true;
         public bool LoginUpToCharacter { get; set; }
 
     }

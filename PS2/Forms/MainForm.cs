@@ -17,18 +17,22 @@ namespace PS2
         static public readonly string _settingsPath = @"./settings.json";
         static public readonly string _credsPath = @"./creds_v2.json";
 
-
         static public bool isClientSet = false;
 
 
         static public Settings _settings = new Settings();
         public List<Account> _accounts = Account.GetAccounts();
 
-        [DllImport("User32.dll")]
-        static extern int SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
@@ -388,12 +392,13 @@ namespace PS2
 
         private void inputCreds(IntPtr handle, string LoginToEnter, string PasswordToEnter, string accName)
         {
-            SetForegroundWindow(handle);
-            Thread.Sleep(200);
-            ShowWindow(handle, 1);
-            Thread.Sleep(1000);
+            ShowWindow(handle, 4); // SW_SHOWNOACTIVATE
+            Thread.Sleep(2000);
 
-
+            //Wait window is focused before enter creds
+            while (GetForegroundWindow() != handle) {
+                Thread.Sleep(1000);
+            }
                     //turn off capslock
                     if (IsKeyLocked(Keys.CapsLock))
                     {
@@ -408,14 +413,22 @@ namespace PS2
                     SendKeys.SendWait("+{END}");
                     SendKeys.SendWait("{BACKSPACE}");
                     Thread.Sleep(200);
+           
+            
 
+                if (SetForegroundWindow(handle)){
                     SendKeys.SendWait(LoginToEnter);
+            }
+                   
                     Thread.Sleep(100);
-                    SendKeys.SendWait("\t");
-                    Thread.Sleep(100);
-                    SendKeys.SendWait(PasswordToEnter);
+                SendKeys.SendWait("\t");
 
-                    if (_settings.LoginUpToCharacter)
+            Thread.Sleep(100);
+            if (SetForegroundWindow(handle))
+                SendKeys.SendWait(PasswordToEnter);
+           
+
+            if (_settings.LoginUpToCharacter)
                     {
                         Thread.Sleep(500);
                         SendKeys.SendWait("{ENTER}");
@@ -424,8 +437,6 @@ namespace PS2
                         Thread.Sleep(500);
                         SendKeys.SendWait("{ENTER}");
                     }
-
-
         }
 
 
@@ -499,11 +510,15 @@ namespace PS2
                 {
                     proc.CloseMainWindow();
                 }
-                proc.WaitForInputIdle();
-                inputCreds(proc.MainWindowHandle, acc.GameAccount, acc.GamePassword, acc.Name);
 
+                IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                while (hWnd == IntPtr.Zero) { 
+                    Thread.Sleep(1000);
+                    hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                }
 
-                Thread.Sleep(1000);
+                if (hWnd != IntPtr.Zero)
+                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name); }).Start();
 
                 if (_settings.RenameClientWindow)
                     changeProductNameInL2int("Lineage II", clientToRun);
