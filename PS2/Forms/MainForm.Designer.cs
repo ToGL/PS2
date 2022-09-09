@@ -144,9 +144,7 @@ namespace PS2
             this.olvColumndescription.AspectName = "Description";
             this.olvColumndescription.CellEditUseWholeCell = true;
             this.olvColumndescription.FillsFreeSpace = true;
-            this.olvColumndescription.Groupable = false;
             this.olvColumndescription.IsEditable = false;
-            this.olvColumndescription.Sortable = false;
             resources.ApplyResources(this.olvColumndescription, "olvColumndescription");
             // 
             // contextMenuStrip1

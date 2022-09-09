@@ -394,13 +394,6 @@ namespace PS2
             Thread.Sleep(1000);
 
 
-            foreach (System.Diagnostics.Process p in System.Diagnostics.Process.GetProcesses())
-            {
-                if (p.ProcessName == "L2" && p.MainWindowTitle.StartsWith(accName) &&
-                    p.MainWindowHandle != IntPtr.Zero)
-                {
-                    SetForegroundWindow(p.MainWindowHandle);
-
                     //turn off capslock
                     if (IsKeyLocked(Keys.CapsLock))
                     {
@@ -432,8 +425,7 @@ namespace PS2
                         SendKeys.SendWait("{ENTER}");
                     }
 
-                }
-            }
+
         }
 
 
