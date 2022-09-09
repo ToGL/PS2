@@ -357,6 +357,9 @@
   <data name="checkBoxSetTitleClient.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBoxSetTitleClient.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="checkBoxSetTitleClient.Location" type="System.Drawing.Point, System.Drawing">
     <value>18, 188</value>
   </data>

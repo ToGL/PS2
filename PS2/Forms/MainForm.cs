@@ -518,10 +518,7 @@ namespace PS2
                 }
 
                 if (hWnd != IntPtr.Zero)
-                inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name);
-
-
-                Thread.Sleep(1000);
+                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name); }).Start();
 
                 if (_settings.RenameClientWindow)
                     changeProductNameInL2int("Lineage II", clientToRun);
