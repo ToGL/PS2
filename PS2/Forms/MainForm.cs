@@ -76,8 +76,11 @@ namespace PS2
             this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
             this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
             this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
+            this.objectListView1.Unsort();
            
             this.objectListView1.RebuildColumns();
+            if (_settings.listState.Length > 0)
+                this.objectListView1.RestoreState(_settings.listState);
 
         }
 
@@ -372,6 +375,7 @@ namespace PS2
                 _settings.AlternativeLineageClientPath = mainClientPath;
                 _settings.RenameClientWindow = true;
                 _settings.LoginUpToCharacter = false;
+                _settings.listState = new byte[0];
 
                 if (!string.IsNullOrEmpty(mainClientPath))
                     isClientSet = true;
@@ -400,19 +404,21 @@ namespace PS2
                 Thread.Sleep(1000);
             }
             //turn off capslock
-            if (IsKeyLocked(Keys.CapsLock))
-            {
+                if (IsKeyLocked(Keys.CapsLock))
+                {
                         const int KEYEVENTF_EXTENDEDKEY = 0x1;
                         const int KEYEVENTF_KEYUP = 0x2;
                         keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
                         keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
                         (UIntPtr)0);
-                    }
-
-                    SendKeys.SendWait("{HOME}");
-                    SendKeys.SendWait("+{END}");
-                    SendKeys.SendWait("{BACKSPACE}");
-                    Thread.Sleep(200);
+                }
+            if (SetForegroundWindow(handle))
+            {
+                SendKeys.SendWait("{HOME}");
+                SendKeys.SendWait("+{END}");
+                SendKeys.SendWait("{BACKSPACE}");
+                Thread.Sleep(200);
+            }
            
             
 
@@ -570,6 +576,9 @@ namespace PS2
 
         private void PsMMainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            _settings.listState = objectListView1.SaveState();
+            _jsonFileUtility.SaveFile(_settingsPath, _settings);
+
             if (_accounts.Count > 0)
                 _jsonFileUtility.SaveFile(_credsPath, _accounts);
         }

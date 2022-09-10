@@ -1,4 +1,6 @@
-﻿namespace PS2.Model
+﻿using System.Net.Http;
+
+namespace PS2.Model
 {
     public class Settings
     {
@@ -8,6 +10,8 @@
 
         public bool RenameClientWindow { get; set; } = true;
         public bool LoginUpToCharacter { get; set; }
+
+        public byte[] listState { get; set; }
 
     }
 }

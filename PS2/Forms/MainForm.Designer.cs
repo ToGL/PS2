@@ -112,7 +112,6 @@ namespace PS2
             this.olvColumnName.IsEditable = false;
             this.olvColumnName.MaximumWidth = 200;
             this.olvColumnName.MinimumWidth = 140;
-            this.olvColumnName.Sortable = false;
             resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.UseFiltering = false;
             this.olvColumnName.UseInitialLetterForGroup = true;
