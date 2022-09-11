@@ -119,5 +119,15 @@ namespace PS2
         {
             InputLanguage.CurrentInputLanguage = original;
         }
+
+        private void DisplayNameTextBox_Enter(object sender, EventArgs e)
+        {
+            setEUForInput();
+        }
+
+        private void DisplayNameTextBox_Leave(object sender, EventArgs e)
+        {
+            rollbackInputToOrigin();
+        }
     }
 }

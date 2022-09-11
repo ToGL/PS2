@@ -77,6 +77,8 @@
             // 
             resources.ApplyResources(this.DisplayNameTextBox, "DisplayNameTextBox");
             this.DisplayNameTextBox.Name = "DisplayNameTextBox";
+            this.DisplayNameTextBox.Enter += new System.EventHandler(this.DisplayNameTextBox_Enter);
+            this.DisplayNameTextBox.Leave += new System.EventHandler(this.DisplayNameTextBox_Leave);
             // 
             // label4
             // 

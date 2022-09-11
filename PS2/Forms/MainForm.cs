@@ -76,10 +76,11 @@ namespace PS2
             this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
             this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
             this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
-            this.objectListView1.Unsort();
+            
            
             this.objectListView1.RebuildColumns();
-            if (_settings.listState.Length > 0)
+            this.objectListView1.Unsort();
+            if (_settings.listState != null)
                 this.objectListView1.RestoreState(_settings.listState);
 
         }
