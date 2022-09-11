@@ -88,6 +88,15 @@ namespace PS2 {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Only English alphabetic and digits are allowed.
+        /// </summary>
+        internal static string engInputOnly {
+            get {
+                return ResourceManager.GetString("engInputOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error reading settings.ini.
         /// </summary>
         internal static string ErrorLoadOldSettings {

@@ -126,6 +126,9 @@
   <data name="EmptyClientsPath" xml:space="preserve">
     <value>You should specify atleast one Client path.</value>
   </data>
+  <data name="engInputOnly" xml:space="preserve">
+    <value>Only English alphabetic and digits are allowed</value>
+  </data>
   <data name="ErrorLoadOldSettings" xml:space="preserve">
     <value>Error reading settings.ini</value>
   </data>
