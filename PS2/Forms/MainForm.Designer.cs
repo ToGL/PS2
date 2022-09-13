@@ -36,6 +36,7 @@ namespace PS2
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.altClientcolumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnGroup = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnOccupation = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumndescription = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,12 +75,14 @@ namespace PS2
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.altClientcolumn);
+            this.objectListView1.AllColumns.Add(this.olvColumnGroup);
             this.objectListView1.AllColumns.Add(this.olvColumnOccupation);
             this.objectListView1.AllColumns.Add(this.olvColumndescription);
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
             this.altClientcolumn,
+            this.olvColumnGroup,
             this.olvColumnOccupation,
             this.olvColumndescription});
             this.objectListView1.ContextMenuStrip = this.contextMenuStrip1;
@@ -118,7 +121,7 @@ namespace PS2
             // 
             // altClientcolumn
             // 
-            this.altClientcolumn.AspectName = "useAlternativeClientPath";
+            this.altClientcolumn.AspectName = "UseAltClientPath";
             this.altClientcolumn.AutoCompleteEditor = false;
             this.altClientcolumn.AutoCompleteEditorMode = System.Windows.Forms.AutoCompleteMode.None;
             this.altClientcolumn.CheckBoxes = true;
@@ -127,6 +130,11 @@ namespace PS2
             this.altClientcolumn.Searchable = false;
             resources.ApplyResources(this.altClientcolumn, "altClientcolumn");
             this.altClientcolumn.WordWrap = true;
+            // 
+            // olvColumnGroup
+            // 
+            this.olvColumnGroup.AspectName = "Group";
+            resources.ApplyResources(this.olvColumnGroup, "olvColumnGroup");
             // 
             // olvColumnOccupation
             // 
@@ -385,7 +393,7 @@ namespace PS2
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox langComBox;
         private System.Windows.Forms.TextBox searchTextBox;
-        
+        private OLVColumn olvColumnGroup;
     }
 }
 

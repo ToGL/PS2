@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace PS2.Model
+﻿namespace PS2.Model
 {
     public class Settings
     {

@@ -203,7 +203,7 @@
     <value>выключить группироку</value>
   </data>
   <data name="objectListView1.MenuLabelUnsort" xml:space="preserve">
-    <value>Сбросить</value>
+    <value>Вернуть порядок из Файла</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="resource.Text" type="System.Resources.ResXNullRef, System.Windows.Forms">

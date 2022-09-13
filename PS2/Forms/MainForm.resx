@@ -137,6 +137,12 @@
   <data name="altClientcolumn.ToolTipText" xml:space="preserve">
     <value>Use Alternative client if checked</value>
   </data>
+  <data name="olvColumnGroup.Text" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="olvColumnGroup.Width" type="System.Int32, mscorlib">
+    <value>120</value>
+  </data>
   <data name="olvColumnOccupation.Text" xml:space="preserve">
     <value>Occupation</value>
   </data>
@@ -232,7 +238,10 @@
     <value>There is nothing to show</value>
   </data>
   <data name="objectListView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 31</value>
+    <value>12, 33</value>
+  </data>
+  <data name="objectListView1.MenuLabelUnsort" xml:space="preserve">
+    <value>Restore File Order</value>
   </data>
   <data name="objectListView1.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>758, 600</value>
@@ -390,6 +399,9 @@
   <data name="&gt;&gt;searchTextBox.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>ru</value>
+  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -584,6 +596,12 @@
     <value>altClientcolumn</value>
   </data>
   <data name="&gt;&gt;altClientcolumn.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnGroup.Name" xml:space="preserve">
+    <value>olvColumnGroup</value>
+  </data>
+  <data name="&gt;&gt;olvColumnGroup.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;olvColumnOccupation.Name" xml:space="preserve">

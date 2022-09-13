@@ -126,6 +126,9 @@
   <data name="EmptyClientsPath" xml:space="preserve">
     <value>Выберите хотябы один путь к клиенту Lineage 2</value>
   </data>
+  <data name="EmptyEntry" xml:space="preserve">
+    <value>Укажите Логин, пароль и отображаемое имя</value>
+  </data>
   <data name="engInputOnly" xml:space="preserve">
     <value>На русском нельзя называть</value>
   </data>
