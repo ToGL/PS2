@@ -123,6 +123,9 @@
   <data name="altClientcolumn.ToolTipText" xml:space="preserve">
     <value>Альтернативный клиент</value>
   </data>
+  <data name="olvColumnGroup.Text" xml:space="preserve">
+    <value>Группа</value>
+  </data>
   <data name="olvColumnOccupation.Text" xml:space="preserve">
     <value>Профессия</value>
   </data>
@@ -130,6 +133,27 @@
     <value>Описание</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>284, 224</value>
+  </data>
+  <data name="objectListView1.EmptyListMsg" xml:space="preserve">
+    <value>Вы еще не добавили аккаунты или не загрузили файл с аккаунтами</value>
+  </data>
+  <data name="objectListView1.MenuLabelGroupBy" xml:space="preserve">
+    <value>Группировать по '{0}'</value>
+  </data>
+  <data name="objectListView1.MenuLabelSortAscending" xml:space="preserve">
+    <value>По возрастанию '{0}'</value>
+  </data>
+  <data name="objectListView1.MenuLabelSortDescending" xml:space="preserve">
+    <value>По убыванию '{0}'</value>
+  </data>
+  <data name="objectListView1.MenuLabelTurnOffGroups" xml:space="preserve">
+    <value>выключить группироку</value>
+  </data>
+  <data name="objectListView1.MenuLabelUnsort" xml:space="preserve">
+    <value>Вернуть порядок из Файла</value>
+  </data>
   <data name="addNewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>283, 26</value>
   </data>
@@ -184,31 +208,6 @@
   <data name="runBULKToolStripMenuItem.Text" xml:space="preserve">
     <value>Запустить несколько</value>
   </data>
-  <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>284, 224</value>
-  </data>
-  <data name="objectListView1.EmptyListMsg" xml:space="preserve">
-    <value>Вы еще не добавили аккаунты или не загрузили файл с аккаунтами</value>
-  </data>
-  <data name="objectListView1.MenuLabelGroupBy" xml:space="preserve">
-    <value>Группировать по '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelSortAscending" xml:space="preserve">
-    <value>По возрастанию '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelSortDescending" xml:space="preserve">
-    <value>По убыванию '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelTurnOffGroups" xml:space="preserve">
-    <value>выключить группироку</value>
-  </data>
-  <data name="objectListView1.MenuLabelUnsort" xml:space="preserve">
-    <value>Вернуть порядок из Файла</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="resource.Text" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>187, 26</value>
   </data>
@@ -221,8 +220,11 @@
   <data name="exitToolStripMenuItem.Text" xml:space="preserve">
     <value>Выход</value>
   </data>
-  <data name="pM20ToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 24</value>
+  <data name="accountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>88, 24</value>
+  </data>
+  <data name="accountsToolStripMenuItem.Text" xml:space="preserve">
+    <value>Аккаунты</value>
   </data>
   <data name="addToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>220, 26</value>
@@ -251,26 +253,17 @@
   <data name="importAccountsToolStripMenuItem.Text" xml:space="preserve">
     <value>Импорт аккаунтов</value>
   </data>
-  <data name="accountsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>88, 24</value>
-  </data>
-  <data name="accountsToolStripMenuItem.Text" xml:space="preserve">
-    <value>Аккаунты</value>
-  </data>
-  <data name="configurationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>253, 26</value>
-  </data>
-  <data name="configurationToolStripMenuItem.Text" xml:space="preserve">
-    <value>Конфигурация клиента</value>
-  </data>
   <data name="optionsToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>98, 24</value>
   </data>
   <data name="optionsToolStripMenuItem.Text" xml:space="preserve">
     <value>Настройки</value>
   </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>782, 28</value>
+  <data name="configurationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 26</value>
+  </data>
+  <data name="configurationToolStripMenuItem.Text" xml:space="preserve">
+    <value>Конфигурация клиента</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

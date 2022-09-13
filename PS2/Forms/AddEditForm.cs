@@ -128,7 +128,7 @@ namespace PS2
 
         private void GameLoginTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(this.GameLoginTextBox.Text, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(this.GameLoginTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
                 this.GameLoginTextBox.Text = "";
@@ -144,7 +144,7 @@ namespace PS2
 
         private void GamePasswordTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(this.GamePasswordTextBox.Text, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(this.GamePasswordTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
                 this.GamePasswordTextBox.Text = "";
@@ -182,7 +182,7 @@ namespace PS2
         private void DisplayNameTextBox_Leave(object sender, EventArgs e)
         {
 
-            if (!Regex.IsMatch(this.DisplayNameTextBox.Text, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(this.DisplayNameTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
                 this.DisplayNameTextBox.Text = "";
