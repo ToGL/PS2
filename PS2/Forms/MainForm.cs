@@ -21,7 +21,7 @@ namespace PS2
 
 
         static public Settings _settings = new Settings();
-        public List<Account> _accounts = Account.GetAccounts();
+        static public List<Account> _accounts = Account.GetAccounts();
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -47,7 +47,7 @@ namespace PS2
                 System.Threading.Thread.CurrentThread.CurrentCulture =
                     System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             }
-            
+
             InitializeComponent();
         }
 
@@ -72,12 +72,12 @@ namespace PS2
             this.objectListView1.SetObjects(_accounts);
             this.objectListView1.ShowGroups = false;
             this.objectListView1.RefreshObjects(_accounts);
-            
-            this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
-            this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
-            this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
-            
-           
+
+           // this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
+           // this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
+           // this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
+
+
             this.objectListView1.RebuildColumns();
             this.objectListView1.Unsort();
             if (_settings.listState != null)
@@ -95,9 +95,12 @@ namespace PS2
                 if (!_accounts.Contains(acc))
                 {
                     _accounts.Add(acc);
+                    objectListView1.AddObject(acc);
                 }
-                else {
+                else
+                {
                     _accounts[_accounts.IndexOf(acc)] = acc;
+                    objectListView1.UpdateObject(acc);
                 }
             }
 
@@ -118,7 +121,7 @@ namespace PS2
                 {
                     if (_accounts.Contains(tmpAcc))
                     {
-                        _accounts[_accounts.IndexOf(tmpAcc)] = acc;                      
+                        _accounts[_accounts.IndexOf(tmpAcc)] = acc;
                     }
                 }
                 this.objectListView1.SetObjects(_accounts);
@@ -146,31 +149,31 @@ namespace PS2
             {
                 nameTodelete = ((Account)objectListView1.SelectedObject).Name;
             }
-                var confirmResult = MessageBox.Show(nameTodelete,
-                                      "Are you sure to delete: ",
-                                      MessageBoxButtons.YesNo);
-                if (confirmResult == DialogResult.Yes)
+            var confirmResult = MessageBox.Show(nameTodelete,
+                                  "Are you sure to delete: ",
+                                  MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                foreach (Account acc in objectListView1.SelectedObjects)
                 {
-                    foreach (Account acc in objectListView1.SelectedObjects)
-                    {
-                        objectListView1.RemoveObject(acc);
-                        _accounts.Remove(acc);
-                    }
+                    objectListView1.RemoveObject(acc);
+                    _accounts.Remove(acc);
                 }
+            }
 
-            
+
             objectListView1.RefreshObjects(_accounts);
 
         }
 
-  
+
         private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (objectListView1.SelectedObjects.Count > 0)
                 Clipboard.SetText(_jsonFileUtility.GetJsonString(objectListView1.SelectedObjects));
         }
 
-  
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("...that's all I can say about Vietnam.", "Forest Gump");
@@ -179,11 +182,6 @@ namespace PS2
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _jsonFileUtility.SaveFile(_credsPath, _accounts);
-
-            Properties.Settings.Default.UseAltClientColumn = this.altClientcolumn.IsVisible;
-            Properties.Settings.Default.OccupationColumn = this.olvColumnOccupation.IsVisible;
-            Properties.Settings.Default.Description = this.olvColumndescription.IsVisible;
-            Properties.Settings.Default.Save();
 
             this.Close();
         }
@@ -242,6 +240,8 @@ namespace PS2
                 acc.Name = line.Substring(secondComma + 1);
                 acc.Description = "";
                 acc.Occupation = "not set";
+                acc.Group = "";
+                acc.UseAltClientPath = false;
 
                 toAdd.Add(acc);
 
@@ -300,7 +300,7 @@ namespace PS2
             }
             if (objectListView1.SelectedObjects.Count == 1)
             {
-                useAlternativeClientToolStripMenuItem.Checked = ((Account)objectListView1.SelectedObject).useAlternativeClientPath;
+                useAlternativeClientToolStripMenuItem.Checked = ((Account)objectListView1.SelectedObject).UseAltClientPath;
             }
         }
 
@@ -330,7 +330,7 @@ namespace PS2
         {
             if (objectListView1.SelectedObjects.Count == 1)
             {
-                ((Account)objectListView1.SelectedObject).useAlternativeClientPath = useAlternativeClientToolStripMenuItem.Checked;
+                ((Account)objectListView1.SelectedObject).UseAltClientPath = useAlternativeClientToolStripMenuItem.Checked;
                 objectListView1.RefreshObjects(objectListView1.SelectedObjects);
             }
         }
@@ -401,18 +401,19 @@ namespace PS2
             Thread.Sleep(2000);
 
             //Wait window is focused before enter creds
-            while (GetForegroundWindow() != handle) {
+            while (GetForegroundWindow() != handle)
+            {
                 Thread.Sleep(1000);
             }
             //turn off capslock
-                if (IsKeyLocked(Keys.CapsLock))
-                {
-                        const int KEYEVENTF_EXTENDEDKEY = 0x1;
-                        const int KEYEVENTF_KEYUP = 0x2;
-                        keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
-                        keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-                        (UIntPtr)0);
-                }
+            if (IsKeyLocked(Keys.CapsLock))
+            {
+                const int KEYEVENTF_EXTENDEDKEY = 0x1;
+                const int KEYEVENTF_KEYUP = 0x2;
+                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                (UIntPtr)0);
+            }
             if (SetForegroundWindow(handle))
             {
                 SendKeys.SendWait("{HOME}");
@@ -420,30 +421,31 @@ namespace PS2
                 SendKeys.SendWait("{BACKSPACE}");
                 Thread.Sleep(200);
             }
-           
-            
 
-                if (SetForegroundWindow(handle)){
-                    SendKeys.SendWait(LoginToEnter);
-                }
-                   
-                    Thread.Sleep(100);
-                SendKeys.SendWait("\t");
+
+
+            if (SetForegroundWindow(handle))
+            {
+                SendKeys.SendWait(LoginToEnter);
+            }
+
+            Thread.Sleep(100);
+            SendKeys.SendWait("\t");
 
             Thread.Sleep(100);
             if (SetForegroundWindow(handle))
                 SendKeys.SendWait(PasswordToEnter);
-           
+
 
             if (_settings.LoginUpToCharacter)
-                    {
-                        Thread.Sleep(500);
-                        SendKeys.SendWait("{ENTER}");
-                        Thread.Sleep(500);
-                        SendKeys.SendWait("{ENTER}");
-                        Thread.Sleep(500);
-                        SendKeys.SendWait("{ENTER}");
-                    }
+            {
+                Thread.Sleep(500);
+                SendKeys.SendWait("{ENTER}");
+                Thread.Sleep(500);
+                SendKeys.SendWait("{ENTER}");
+                Thread.Sleep(500);
+                SendKeys.SendWait("{ENTER}");
+            }
         }
 
 
@@ -504,7 +506,7 @@ namespace PS2
                 else
                     clientToRun = _settings.MainLineageClientPath;
 
-                if (acc.useAlternativeClientPath && !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
+                if (acc.UseAltClientPath && !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
                     clientToRun = _settings.AlternativeLineageClientPath;
 
 
@@ -519,7 +521,8 @@ namespace PS2
                 }
 
                 IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
-                while (hWnd == IntPtr.Zero) { 
+                while (hWnd == IntPtr.Zero)
+                {
                     Thread.Sleep(1000);
                     hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
                 }
@@ -570,7 +573,7 @@ namespace PS2
                 _accounts.Add(acc);
                 objectListView1.UpdateObject(acc);
             }
-            
+
             objectListView1.RefreshObjects(_accounts);
             objectListView1.SelectObjects(toAdd);
         }
@@ -587,10 +590,7 @@ namespace PS2
         private void PsMMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Language = langComBox.SelectedValue.ToString();
-            Properties.Settings.Default.UseAltClientColumn = this.altClientcolumn.IsVisible;
-            Properties.Settings.Default.OccupationColumn = this.olvColumnOccupation.IsVisible;
-            Properties.Settings.Default.Description = this.olvColumndescription.IsVisible;
-           
+          
             Properties.Settings.Default.Save();
         }
 

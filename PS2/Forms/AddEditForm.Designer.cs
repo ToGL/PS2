@@ -42,6 +42,8 @@
             this.usealtClientCheckBox = new System.Windows.Forms.CheckBox();
             this.saveAndclose = new System.Windows.Forms.Button();
             this.saveAndAddMore = new System.Windows.Forms.Button();
+            this.labelGroup = new System.Windows.Forms.Label();
+            this.textBoxGroup = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -158,10 +160,25 @@
             this.saveAndAddMore.UseVisualStyleBackColor = true;
             this.saveAndAddMore.Click += new System.EventHandler(this.saveAndAddMore_Click);
             // 
+            // labelGroup
+            // 
+            resources.ApplyResources(this.labelGroup, "labelGroup");
+            this.labelGroup.Name = "labelGroup";
+            // 
+            // textBoxGroup
+            // 
+            resources.ApplyResources(this.textBoxGroup, "textBoxGroup");
+            this.textBoxGroup.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.textBoxGroup.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.textBoxGroup.Name = "textBoxGroup";
+            this.textBoxGroup.TextChanged += new System.EventHandler(this.textBoxGroup_TextChanged);
+            // 
             // AddEditForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.textBoxGroup);
+            this.Controls.Add(this.labelGroup);
             this.Controls.Add(this.saveAndAddMore);
             this.Controls.Add(this.saveAndclose);
             this.Controls.Add(this.usealtClientCheckBox);
@@ -176,6 +193,7 @@
             this.Controls.Add(this.GameLoginTextBox);
             this.Controls.Add(this.label1);
             this.Name = "AddEditForm";
+            this.Load += new System.EventHandler(this.AddEditForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +214,7 @@
         private System.Windows.Forms.CheckBox usealtClientCheckBox;
         private System.Windows.Forms.Button saveAndclose;
         private System.Windows.Forms.Button saveAndAddMore;
+        private System.Windows.Forms.Label labelGroup;
+        private System.Windows.Forms.TextBox textBoxGroup;
     }
 }

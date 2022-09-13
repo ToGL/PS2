@@ -88,6 +88,15 @@ namespace PS2 {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на You should specify Login,Password,Display name.
+        /// </summary>
+        internal static string EmptyEntry {
+            get {
+                return ResourceManager.GetString("EmptyEntry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Only English alphabetic and digits are allowed.
         /// </summary>
         internal static string engInputOnly {

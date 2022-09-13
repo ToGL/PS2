@@ -163,6 +163,12 @@
   <data name="saveAndAddMore.Text" xml:space="preserve">
     <value>Сохранить и Добавить еще</value>
   </data>
+  <data name="labelGroup.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 16</value>
+  </data>
+  <data name="labelGroup.Text" xml:space="preserve">
+    <value>Группа аккаунтов:</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAgBAAAAAAAAAAAAAAAAAAAAAA

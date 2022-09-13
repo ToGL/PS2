@@ -34,41 +34,5 @@ namespace PS2.Properties {
                 this["Language"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseAltClientColumn {
-            get {
-                return ((bool)(this["UseAltClientColumn"]));
-            }
-            set {
-                this["UseAltClientColumn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool OccupationColumn {
-            get {
-                return ((bool)(this["OccupationColumn"]));
-            }
-            set {
-                this["OccupationColumn"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Description {
-            get {
-                return ((bool)(this["Description"]));
-            }
-            set {
-                this["Description"] = value;
-            }
-        }
     }
 }

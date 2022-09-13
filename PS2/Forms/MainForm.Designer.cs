@@ -36,6 +36,7 @@ namespace PS2
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumnName = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.altClientcolumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnGroup = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnOccupation = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumndescription = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,12 +75,14 @@ namespace PS2
             resources.ApplyResources(this.objectListView1, "objectListView1");
             this.objectListView1.AllColumns.Add(this.olvColumnName);
             this.objectListView1.AllColumns.Add(this.altClientcolumn);
+            this.objectListView1.AllColumns.Add(this.olvColumnGroup);
             this.objectListView1.AllColumns.Add(this.olvColumnOccupation);
             this.objectListView1.AllColumns.Add(this.olvColumndescription);
             this.objectListView1.CellEditUseWholeCell = false;
             this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
             this.altClientcolumn,
+            this.olvColumnGroup,
             this.olvColumnOccupation,
             this.olvColumndescription});
             this.objectListView1.ContextMenuStrip = this.contextMenuStrip1;
@@ -90,6 +93,7 @@ namespace PS2
             this.objectListView1.HideSelection = false;
             this.objectListView1.IsSearchOnSortColumn = false;
             this.objectListView1.Name = "objectListView1";
+            this.objectListView1.OverlayText.Text = resources.GetString("resource.Text");
             this.objectListView1.SelectAllOnControlA = false;
             this.objectListView1.SelectColumnsMenuStaysOpen = false;
             this.objectListView1.SelectedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
@@ -107,47 +111,53 @@ namespace PS2
             // 
             this.olvColumnName.AspectName = "Name";
             this.olvColumnName.CellEditUseWholeCell = true;
+            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.HeaderCheckBoxUpdatesRowCheckBoxes = false;
             this.olvColumnName.Hideable = false;
             this.olvColumnName.IsEditable = false;
             this.olvColumnName.MaximumWidth = 200;
             this.olvColumnName.MinimumWidth = 140;
-            resources.ApplyResources(this.olvColumnName, "olvColumnName");
             this.olvColumnName.UseFiltering = false;
             this.olvColumnName.UseInitialLetterForGroup = true;
             // 
             // altClientcolumn
             // 
-            this.altClientcolumn.AspectName = "useAlternativeClientPath";
+            this.altClientcolumn.AspectName = "UseAltClientPath";
             this.altClientcolumn.AutoCompleteEditor = false;
             this.altClientcolumn.AutoCompleteEditorMode = System.Windows.Forms.AutoCompleteMode.None;
             this.altClientcolumn.CheckBoxes = true;
             this.altClientcolumn.Groupable = false;
+            resources.ApplyResources(this.altClientcolumn, "altClientcolumn");
             this.altClientcolumn.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.altClientcolumn.Searchable = false;
-            resources.ApplyResources(this.altClientcolumn, "altClientcolumn");
             this.altClientcolumn.WordWrap = true;
+            // 
+            // olvColumnGroup
+            // 
+            this.olvColumnGroup.AspectName = "Group";
+            resources.ApplyResources(this.olvColumnGroup, "olvColumnGroup");
             // 
             // olvColumnOccupation
             // 
             this.olvColumnOccupation.AspectName = "Occupation";
             this.olvColumnOccupation.CellEditUseWholeCell = true;
+            resources.ApplyResources(this.olvColumnOccupation, "olvColumnOccupation");
             this.olvColumnOccupation.IsEditable = false;
             this.olvColumnOccupation.MaximumWidth = 140;
             this.olvColumnOccupation.MinimumWidth = 140;
             this.olvColumnOccupation.Searchable = false;
-            resources.ApplyResources(this.olvColumnOccupation, "olvColumnOccupation");
             // 
             // olvColumndescription
             // 
             this.olvColumndescription.AspectName = "Description";
             this.olvColumndescription.CellEditUseWholeCell = true;
             this.olvColumndescription.FillsFreeSpace = true;
-            this.olvColumndescription.IsEditable = false;
             resources.ApplyResources(this.olvColumndescription, "olvColumndescription");
+            this.olvColumndescription.IsEditable = false;
             // 
             // contextMenuStrip1
             // 
+            resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addNewToolStripMenuItem,
@@ -161,54 +171,53 @@ namespace PS2
             this.runToolStripMenuItem,
             this.runBULKToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             // 
             // addNewToolStripMenuItem
             // 
-            this.addNewToolStripMenuItem.Name = "addNewToolStripMenuItem";
             resources.ApplyResources(this.addNewToolStripMenuItem, "addNewToolStripMenuItem");
+            this.addNewToolStripMenuItem.Name = "addNewToolStripMenuItem";
             this.addNewToolStripMenuItem.Click += new System.EventHandler(this.addNewToolStripMenuItem_Click);
             // 
             // useAlternativeClientToolStripMenuItem
             // 
+            resources.ApplyResources(this.useAlternativeClientToolStripMenuItem, "useAlternativeClientToolStripMenuItem");
             this.useAlternativeClientToolStripMenuItem.CheckOnClick = true;
             this.useAlternativeClientToolStripMenuItem.Name = "useAlternativeClientToolStripMenuItem";
-            resources.ApplyResources(this.useAlternativeClientToolStripMenuItem, "useAlternativeClientToolStripMenuItem");
             this.useAlternativeClientToolStripMenuItem.Click += new System.EventHandler(this.useAlternativeClientToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem1
             // 
-            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
             resources.ApplyResources(this.editToolStripMenuItem1, "editToolStripMenuItem1");
+            this.editToolStripMenuItem1.Name = "editToolStripMenuItem1";
             this.editToolStripMenuItem1.Click += new System.EventHandler(this.editToolStripMenuItem1_Click);
             // 
             // removeToolStripMenuItem1
             // 
-            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
             resources.ApplyResources(this.removeToolStripMenuItem1, "removeToolStripMenuItem1");
+            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
             this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
             // 
             // splitterToolStripMenuItem2
             // 
-            this.splitterToolStripMenuItem2.Name = "splitterToolStripMenuItem2";
             resources.ApplyResources(this.splitterToolStripMenuItem2, "splitterToolStripMenuItem2");
+            this.splitterToolStripMenuItem2.Name = "splitterToolStripMenuItem2";
             // 
             // copyToClipboardToolStripMenuItem
             // 
-            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             resources.ApplyResources(this.copyToClipboardToolStripMenuItem, "copyToClipboardToolStripMenuItem");
+            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
             // 
             // loadFromClipboardToolStripMenuItem
             // 
-            this.loadFromClipboardToolStripMenuItem.Name = "loadFromClipboardToolStripMenuItem";
             resources.ApplyResources(this.loadFromClipboardToolStripMenuItem, "loadFromClipboardToolStripMenuItem");
+            this.loadFromClipboardToolStripMenuItem.Name = "loadFromClipboardToolStripMenuItem";
             this.loadFromClipboardToolStripMenuItem.Click += new System.EventHandler(this.loadFromClipboardToolStripMenuItem_Click);
             // 
             // splitterToolStripMenuItem1
             // 
-            this.splitterToolStripMenuItem1.Name = "splitterToolStripMenuItem1";
             resources.ApplyResources(this.splitterToolStripMenuItem1, "splitterToolStripMenuItem1");
+            this.splitterToolStripMenuItem1.Name = "splitterToolStripMenuItem1";
             // 
             // runToolStripMenuItem
             // 
@@ -225,38 +234,39 @@ namespace PS2
             // 
             // menuStrip1
             // 
+            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pM20ToolStripMenuItem,
             this.accountsToolStripMenuItem,
             this.optionsToolStripMenuItem});
-            resources.ApplyResources(this.menuStrip1, "menuStrip1");
             this.menuStrip1.Name = "menuStrip1";
             // 
             // pM20ToolStripMenuItem
             // 
+            resources.ApplyResources(this.pM20ToolStripMenuItem, "pM20ToolStripMenuItem");
             this.pM20ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.pM20ToolStripMenuItem.Name = "pM20ToolStripMenuItem";
-            resources.ApplyResources(this.pM20ToolStripMenuItem, "pM20ToolStripMenuItem");
             // 
             // aboutToolStripMenuItem
             // 
+            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             this.aboutToolStripMenuItem.Image = global::PS2.Properties.Resources.sign_info_icon_34361;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            resources.ApplyResources(this.aboutToolStripMenuItem, "aboutToolStripMenuItem");
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
+            resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             this.exitToolStripMenuItem.Image = global::PS2.Properties.Resources.sign_emergency_code_sos_14_icon_icons_com_57231;
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // accountsToolStripMenuItem
             // 
+            resources.ApplyResources(this.accountsToolStripMenuItem, "accountsToolStripMenuItem");
             this.accountsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addToolStripMenuItem,
             this.editToolStripMenuItem,
@@ -264,63 +274,63 @@ namespace PS2
             this.splitterToolStripMenuItem,
             this.importAccountsToolStripMenuItem});
             this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
-            resources.ApplyResources(this.accountsToolStripMenuItem, "accountsToolStripMenuItem");
             // 
             // addToolStripMenuItem
             // 
+            resources.ApplyResources(this.addToolStripMenuItem, "addToolStripMenuItem");
             this.addToolStripMenuItem.Image = global::PS2.Properties.Resources.plus_40632;
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            resources.ApplyResources(this.addToolStripMenuItem, "addToolStripMenuItem");
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
+            resources.ApplyResources(this.editToolStripMenuItem, "editToolStripMenuItem");
             this.editToolStripMenuItem.Image = global::PS2.Properties.Resources.edit_icon_icons_com_52382;
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            resources.ApplyResources(this.editToolStripMenuItem, "editToolStripMenuItem");
             this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
+            resources.ApplyResources(this.removeToolStripMenuItem, "removeToolStripMenuItem");
             this.removeToolStripMenuItem.Image = global::PS2.Properties.Resources.crossregular_106296;
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            resources.ApplyResources(this.removeToolStripMenuItem, "removeToolStripMenuItem");
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // splitterToolStripMenuItem
             // 
-            this.splitterToolStripMenuItem.Name = "splitterToolStripMenuItem";
             resources.ApplyResources(this.splitterToolStripMenuItem, "splitterToolStripMenuItem");
+            this.splitterToolStripMenuItem.Name = "splitterToolStripMenuItem";
             // 
             // importAccountsToolStripMenuItem
             // 
+            resources.ApplyResources(this.importAccountsToolStripMenuItem, "importAccountsToolStripMenuItem");
             this.importAccountsToolStripMenuItem.Image = global::PS2.Properties.Resources.import_download_icon_176152;
             this.importAccountsToolStripMenuItem.Name = "importAccountsToolStripMenuItem";
-            resources.ApplyResources(this.importAccountsToolStripMenuItem, "importAccountsToolStripMenuItem");
             this.importAccountsToolStripMenuItem.Click += new System.EventHandler(this.importAccountsToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
+            resources.ApplyResources(this.optionsToolStripMenuItem, "optionsToolStripMenuItem");
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configurationToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            resources.ApplyResources(this.optionsToolStripMenuItem, "optionsToolStripMenuItem");
             // 
             // configurationToolStripMenuItem
             // 
+            resources.ApplyResources(this.configurationToolStripMenuItem, "configurationToolStripMenuItem");
             this.configurationToolStripMenuItem.Image = global::PS2.Properties.Resources.configuration_6036;
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            resources.ApplyResources(this.configurationToolStripMenuItem, "configurationToolStripMenuItem");
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.configurationToolStripMenuItem_Click);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "creds";
+            resources.ApplyResources(this.openFileDialog1, "openFileDialog1");
             // 
             // langComBox
             // 
-            this.langComBox.FormattingEnabled = true;
             resources.ApplyResources(this.langComBox, "langComBox");
+            this.langComBox.FormattingEnabled = true;
             this.langComBox.Name = "langComBox";
             this.langComBox.SelectionChangeCommitted += new System.EventHandler(this.langComBox_SelectionChangeCommitted);
             // 
@@ -385,7 +395,7 @@ namespace PS2
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ComboBox langComBox;
         private System.Windows.Forms.TextBox searchTextBox;
-        
+        private OLVColumn olvColumnGroup;
     }
 }
 
