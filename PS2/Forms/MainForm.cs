@@ -183,11 +183,6 @@ namespace PS2
         {
             _jsonFileUtility.SaveFile(_credsPath, _accounts);
 
-            Properties.Settings.Default.UseAltClientColumn = this.altClientcolumn.IsVisible;
-            Properties.Settings.Default.OccupationColumn = this.olvColumnOccupation.IsVisible;
-            Properties.Settings.Default.Description = this.olvColumndescription.IsVisible;
-            Properties.Settings.Default.Save();
-
             this.Close();
         }
 
