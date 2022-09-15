@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace PS2
 {
@@ -19,20 +20,16 @@ namespace PS2
 
         static public bool isClientSet = false;
 
-
         static public Settings _settings = new Settings();
         static public List<Account> _accounts = Account.GetAccounts();
-
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
+       
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll")]
+        private static extern bool PostMessage(IntPtr hWnd,UInt32 Msg,Int32 wParam,Int32 lParam);
 
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
@@ -400,51 +397,63 @@ namespace PS2
             ShowWindow(handle, 4); // SW_SHOWNOACTIVATE
             Thread.Sleep(2000);
 
-            //Wait window is focused before enter creds
-            while (GetForegroundWindow() != handle)
-            {
-                Thread.Sleep(1000);
-            }
-            //turn off capslock
-            if (IsKeyLocked(Keys.CapsLock))
-            {
-                const int KEYEVENTF_EXTENDEDKEY = 0x1;
-                const int KEYEVENTF_KEYUP = 0x2;
-                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
-                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-                (UIntPtr)0);
-            }
-            if (SetForegroundWindow(handle))
-            {
-                SendKeys.SendWait("{HOME}");
-                SendKeys.SendWait("+{END}");
-                SendKeys.SendWait("{BACKSPACE}");
-                Thread.Sleep(200);
-            }
+              //turn off capslock
+              if (IsKeyLocked(Keys.CapsLock))
+              {
+                  const int KEYEVENTF_EXTENDEDKEY = 0x1;
+                  const int KEYEVENTF_KEYUP = 0x2;
+                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                  (UIntPtr)0);
+              }
+            /*  if (SetForegroundWindow(handle))
+              {
+                  SendKeys.SendWait("{HOME}");
+                  SendKeys.SendWait("+{END}");
+                  SendKeys.SendWait("{BACKSPACE}");
+                  Thread.Sleep(200);
+              }
+
+              */
 
 
+            const Int32 WM_CHAR = 0x0102;
+            const uint WM_KEYDOWN = 0x0100;
+            const uint WM_KEYUP = 0x0101;
+            const int VK_TAB = 0x09;
+            const int VK_ENTER = 0x0D;
 
-            if (SetForegroundWindow(handle))
-            {
-                SendKeys.SendWait(LoginToEnter);
+            foreach (char ch in LoginToEnter.ToCharArray()) {
+                PostMessage(handle, WM_CHAR, ch, 0);
             }
 
             Thread.Sleep(100);
-            SendKeys.SendWait("\t");
+
+            PostMessage(handle, WM_KEYDOWN, VK_TAB, 0);
+            PostMessage(handle, WM_KEYUP, VK_TAB, 0);
 
             Thread.Sleep(100);
-            if (SetForegroundWindow(handle))
-                SendKeys.SendWait(PasswordToEnter);
+           
+            foreach (char ch in PasswordToEnter.ToCharArray())
+            {
+                PostMessage(handle, WM_CHAR, ch, 0);
+            }
 
 
             if (_settings.LoginUpToCharacter)
             {
                 Thread.Sleep(500);
-                SendKeys.SendWait("{ENTER}");
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER,0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
                 Thread.Sleep(500);
-                SendKeys.SendWait("{ENTER}");
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
                 Thread.Sleep(500);
-                SendKeys.SendWait("{ENTER}");
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER,0);
             }
         }
 
@@ -514,6 +523,7 @@ namespace PS2
                     changeProductNameInL2int(acc.Name, clientToRun);
 
                 Process proc = Process.Start(clientToRun);
+
                 proc.WaitForInputIdle();
                 if (proc.MainWindowTitle.Equals("Warning")) //skip warning
                 {
@@ -539,8 +549,7 @@ namespace PS2
 
         private void LoadAccounts()
         {
-            //TODO proper update accounts on import
-
+            
             if (!File.Exists(_credsPath))
             {
 
