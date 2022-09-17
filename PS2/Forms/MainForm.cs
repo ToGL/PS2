@@ -1,14 +1,16 @@
 ﻿using BrightIdeasSoftware;
+using NonInvasiveKeyboardHookLibrary;
 using PS2.Model;
 using PS2.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace PS2
 {
@@ -22,14 +24,19 @@ namespace PS2
 
         static public Settings _settings = new Settings();
         static public List<Account> _accounts = Account.GetAccounts();
-       
+        static public Dictionary<String, int> loginProc = new Dictionary<string, int>();
+
+        static private Guid hotkey;
+        bool setUnsetForce = false;
+        KeyboardHookManager keyboardHookManager = new KeyboardHookManager();
+
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
         [DllImport("user32.dll")]
-        private static extern bool PostMessage(IntPtr hWnd,UInt32 Msg,Int32 wParam,Int32 lParam);
+        private static extern bool PostMessage(IntPtr hWnd, UInt32 Msg, Int32 wParam, Int32 lParam);
 
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
@@ -70,16 +77,14 @@ namespace PS2
             this.objectListView1.ShowGroups = false;
             this.objectListView1.RefreshObjects(_accounts);
 
-           // this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
-           // this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
-           // this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
-
 
             this.objectListView1.RebuildColumns();
             this.objectListView1.Unsort();
             if (_settings.listState != null)
                 this.objectListView1.RestoreState(_settings.listState);
 
+            this.button1.Text = "OFF";
+            this.button1.ForeColor = Color.Red;
         }
 
         private void addNewAccountViaForm()
@@ -215,10 +220,7 @@ namespace PS2
                 objectListView1.SetObjects(_accounts);
                 objectListView1.RefreshObjects(_accounts);
                 objectListView1.SelectObjects(toAdd);
-
             }
-
-
         }
 
         private void readFromCSV(string fileName)
@@ -392,20 +394,20 @@ namespace PS2
             }
         }
 
-        private void inputCreds(IntPtr handle, string LoginToEnter, string PasswordToEnter, string accName)
+        private void inputCreds(IntPtr handle, string LoginToEnter, string PasswordToEnter, string accName, bool force)
         {
             ShowWindow(handle, 4); // SW_SHOWNOACTIVATE
-            Thread.Sleep(2000);
+            
 
-              //turn off capslock
-              if (IsKeyLocked(Keys.CapsLock))
-              {
-                  const int KEYEVENTF_EXTENDEDKEY = 0x1;
-                  const int KEYEVENTF_KEYUP = 0x2;
-                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
-                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-                  (UIntPtr)0);
-              }
+            //turn off capslock
+            if (IsKeyLocked(Keys.CapsLock))
+            {
+                const int KEYEVENTF_EXTENDEDKEY = 0x1;
+                const int KEYEVENTF_KEYUP = 0x2;
+                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+                keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+                (UIntPtr)0);
+            }
             /*  if (SetForegroundWindow(handle))
               {
                   SendKeys.SendWait("{HOME}");
@@ -427,33 +429,44 @@ namespace PS2
                 PostMessage(handle, WM_CHAR, ch, 0);
             }
 
-            Thread.Sleep(100);
+        
 
             PostMessage(handle, WM_KEYDOWN, VK_TAB, 0);
             PostMessage(handle, WM_KEYUP, VK_TAB, 0);
 
-            Thread.Sleep(100);
-           
+            
+
             foreach (char ch in PasswordToEnter.ToCharArray())
             {
                 PostMessage(handle, WM_CHAR, ch, 0);
             }
 
+            if (force) {
+                
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
+
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
+                force = false;
+            }
 
             if (_settings.LoginUpToCharacter)
             {
-                Thread.Sleep(500);
-                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
-                PostMessage(handle, WM_CHAR, VK_ENTER,0);
-                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
-                Thread.Sleep(500);
+        
                 PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
                 PostMessage(handle, WM_CHAR, VK_ENTER, 0);
                 PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
-                Thread.Sleep(500);
+ 
                 PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
                 PostMessage(handle, WM_CHAR, VK_ENTER, 0);
-                PostMessage(handle, WM_KEYUP, VK_ENTER,0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
+     
+                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
+                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
+                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
             }
         }
 
@@ -522,15 +535,31 @@ namespace PS2
                 if (_settings.RenameClientWindow)
                     changeProductNameInL2int(acc.Name, clientToRun);
 
+                IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                if (hWnd != IntPtr.Zero)
+                {
+                    MessageBox.Show(Strings.ClientForAccIsRunning, "Info");
+                    return;
+                }
+
                 Process proc = Process.Start(clientToRun);
 
+                if (loginProc.ContainsKey(acc.Name))
+                {
+                    loginProc[acc.Name] = proc.Id;
+                }
+                else
+                {
+                    loginProc.Add(acc.Name, proc.Id);
+                }
+              
                 proc.WaitForInputIdle();
                 if (proc.MainWindowTitle.Equals("Warning")) //skip warning
                 {
                     proc.CloseMainWindow();
                 }
 
-                IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
                 while (hWnd == IntPtr.Zero)
                 {
                     Thread.Sleep(1000);
@@ -538,7 +567,7 @@ namespace PS2
                 }
 
                 if (hWnd != IntPtr.Zero)
-                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name); }).Start();
+                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name, false); }).Start();
 
                 if (_settings.RenameClientWindow)
                     changeProductNameInL2int("Lineage II", clientToRun);
@@ -546,10 +575,58 @@ namespace PS2
                 Thread.Sleep(1000);
             }
         }
+        private void runClient(Account acc)
+        {
+                string clientToRun;
+                if (string.IsNullOrEmpty(_settings.MainLineageClientPath))
+                    clientToRun = _settings.AlternativeLineageClientPath;
+                else
+                    clientToRun = _settings.MainLineageClientPath;
+
+                if (acc.UseAltClientPath && !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
+                    clientToRun = _settings.AlternativeLineageClientPath;
+
+
+                if (_settings.RenameClientWindow)
+                    changeProductNameInL2int(acc.Name, clientToRun);
+                
+                IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                if (hWnd != IntPtr.Zero) {
+                    MessageBox.Show(Strings.ClientForAccIsRunning, "Info");
+                    return;
+                }
+
+                Process proc = Process.Start(clientToRun);
+
+                loginProc.Add(acc.Name, proc.Id);
+
+                proc.WaitForInputIdle();
+                if (proc.MainWindowTitle.Equals("Warning")) //skip warning
+                {
+                    proc.CloseMainWindow();
+                }
+
+                hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                while (hWnd == IntPtr.Zero)
+                {
+                    Thread.Sleep(1000);
+                    hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
+                }
+
+                if (hWnd != IntPtr.Zero)
+                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name, true); }).Start();
+
+                if (_settings.RenameClientWindow)
+                    changeProductNameInL2int("Lineage II", clientToRun);
+                //delay to set lineage 2 product back
+                Thread.Sleep(1000);
+            
+        }
+
 
         private void LoadAccounts()
         {
-            
+
             if (!File.Exists(_credsPath))
             {
 
@@ -599,8 +676,10 @@ namespace PS2
         private void PsMMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Language = langComBox.SelectedValue.ToString();
-          
+
             Properties.Settings.Default.Save();
+            if(this.setUnsetForce)
+                keyboardHookManager.UnregisterHotkey(hotkey);
         }
 
         private void langComBox_SelectionChangeCommitted(object sender, EventArgs e)
@@ -660,5 +739,102 @@ namespace PS2
             runClient();
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {          
+            if (!setUnsetForce) {
+                keyboardHookManager.Start();
+                setUnsetForce = true;
+                this.button1.Text = "ON";
+                this.button1.ForeColor = Color.Green;
+                String accname = "";
+
+                hotkey = keyboardHookManager.RegisterHotkey(NonInvasiveKeyboardHookLibrary.ModifierKeys.Control, (int) Keys.Z, () =>
+                {
+                    int toKill = 0;
+                
+                    accname = GetActiveWindowTitle().Split(' ')[0];
+                    if (loginProc.TryGetValue(accname, out toKill))
+                    {
+                        if (toKill != 0)
+                        {
+                            KillProcess(toKill);
+                            loginProc.Remove(accname);
+
+                            foreach (Account acc in PsMMainForm._accounts) {
+                                if (acc.Name.Equals(accname))
+                                {
+                                    runClient(acc);
+                                }
+                            }
+
+                        }
+                    }
+                });
+            }else{
+                setUnsetForce=false;
+                this.button1.Text = "OFF";
+                this.button1.ForeColor = Color.Red;
+                keyboardHookManager.Stop();
+                keyboardHookManager.UnregisterHotkey(hotkey);
+            }
+        }
+
+        public void KillProcess(int pid)
+        {
+            Process[] process = Process.GetProcesses();
+
+            foreach (Process prs in process)
+            {
+                if (prs.Id == pid)
+                {
+                    prs.Kill();
+                    break;
+                }
+            }
+        }
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        private string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, Buff, nChars) > 0)
+            {
+                return Buff.ToString();
+            }
+            return null;
+        }
+
+        private void PsMMainForm_Resize(object sender, EventArgs e)
+        {
+
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                notifyIcon1.Visible = true;
+                notifyIcon1.ShowBalloonTip(100);
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                notifyIcon1.Visible = false;
+            }
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+           
+        }
+
+        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
     }
 }

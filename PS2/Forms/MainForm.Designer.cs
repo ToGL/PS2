@@ -65,6 +65,8 @@ namespace PS2
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.langComBox = new System.Windows.Forms.ComboBox();
             this.searchTextBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -338,10 +340,24 @@ namespace PS2
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.TextChanged += new System.EventHandler(this.searchTextBox_TextChanged);
             // 
+            // button1
+            // 
+            resources.ApplyResources(this.button1, "button1");
+            this.button1.Name = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // notifyIcon1
+            // 
+            resources.ApplyResources(this.notifyIcon1, "notifyIcon1");
+            this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
             // PsMMainForm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.langComBox);
             this.Controls.Add(this.objectListView1);
@@ -351,6 +367,7 @@ namespace PS2
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PsMMainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PsMMainForm_FormClosed);
             this.Load += new System.EventHandler(this.PsMMainForm_Load);
+            this.Resize += new System.EventHandler(this.PsMMainForm_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
@@ -394,6 +411,8 @@ namespace PS2
         private System.Windows.Forms.ComboBox langComBox;
         private System.Windows.Forms.TextBox searchTextBox;
         private OLVColumn olvColumnGroup;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 

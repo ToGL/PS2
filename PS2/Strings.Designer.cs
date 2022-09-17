@@ -61,6 +61,15 @@ namespace PS2 {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Client with same title already running. Trun it off to avoid colisions..
+        /// </summary>
+        internal static string ClientForAccIsRunning {
+            get {
+                return ResourceManager.GetString("ClientForAccIsRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Are you sure to delete:.
         /// </summary>
         internal static string deleteConfirm {
@@ -97,7 +106,7 @@ namespace PS2 {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Only English alphabetic and digits are allowed.
+        ///   Ищет локализованную строку, похожую на Only English alphabetic and digits or !@#$&amp;();:.&apos;, _- are allowed.
         /// </summary>
         internal static string engInputOnly {
             get {
