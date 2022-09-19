@@ -57,7 +57,7 @@
             resources.ApplyResources(this.mainClientPathButton, "mainClientPathButton");
             this.mainClientPathButton.Name = "mainClientPathButton";
             this.mainClientPathButton.UseVisualStyleBackColor = true;
-            this.mainClientPathButton.Click += new System.EventHandler(this.mainClientPathButton_Click);
+            this.mainClientPathButton.Click += new System.EventHandler(this.MainClientPathButton_Click);
             // 
             // AlternativeClientPAthL
             // 
@@ -74,14 +74,14 @@
             resources.ApplyResources(this.altClientSet, "altClientSet");
             this.altClientSet.Name = "altClientSet";
             this.altClientSet.UseVisualStyleBackColor = true;
-            this.altClientSet.Click += new System.EventHandler(this.altClientSet_Click);
+            this.altClientSet.Click += new System.EventHandler(this.AltClientSet_Click);
             // 
             // saveOptions
             // 
             resources.ApplyResources(this.saveOptions, "saveOptions");
             this.saveOptions.Name = "saveOptions";
             this.saveOptions.UseVisualStyleBackColor = true;
-            this.saveOptions.Click += new System.EventHandler(this.saveOptions_Click);
+            this.saveOptions.Click += new System.EventHandler(this.SaveOptions_Click);
             // 
             // CancelOption
             // 
@@ -101,14 +101,14 @@
             this.checkBoxSetTitleClient.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSetTitleClient.Name = "checkBoxSetTitleClient";
             this.checkBoxSetTitleClient.UseVisualStyleBackColor = true;
-            this.checkBoxSetTitleClient.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBoxSetTitleClient.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // loadToCharacter
             // 
             resources.ApplyResources(this.loadToCharacter, "loadToCharacter");
             this.loadToCharacter.Name = "loadToCharacter";
             this.loadToCharacter.UseVisualStyleBackColor = true;
-            this.loadToCharacter.CheckedChanged += new System.EventHandler(this.loadToCharacter_CheckedChanged);
+            this.loadToCharacter.CheckedChanged += new System.EventHandler(this.LoadToCharacter_CheckedChanged);
             // 
             // OptionsForm
             // 

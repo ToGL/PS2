@@ -1,95 +1,107 @@
-﻿using System;
+﻿using PS2.Model;
+using PS2.Utilities;
+using System;
 using System.Windows.Forms;
 
 namespace PS2
 {
     public partial class OptionsForm : Form
     {
-        public OptionsForm()
+        private readonly JsonFileUtility _jsonFileUtility = new JsonFileUtility();
+        private readonly Settings _settings;
+
+        public OptionsForm(Settings settings)
         {
+            _settings = settings;
+
             InitializeComponent();
-            if (!string.IsNullOrEmpty(PsMMainForm._settings.MainLineageClientPath))
-                this.mainClientTextBox.Text = PsMMainForm._settings.MainLineageClientPath;
-            if (!string.IsNullOrEmpty(PsMMainForm._settings.AlternativeLineageClientPath))
-                this.altClientTextBox.Text = PsMMainForm._settings.AlternativeLineageClientPath;
+            if (!string.IsNullOrEmpty(_settings.MainLineageClientPath))
+            {
+                mainClientTextBox.Text = _settings.MainLineageClientPath;
+            }
 
-            this.loadToCharacter.Checked = PsMMainForm._settings.LoginUpToCharacter ? PsMMainForm._settings.LoginUpToCharacter : false;
-            this.checkBoxSetTitleClient.Checked = true; //PsMMainForm._settings.RenameClientWindow ? PsMMainForm._settings.RenameClientWindow : false;
+            if (!string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
+            {
+                altClientTextBox.Text = _settings.AlternativeLineageClientPath;
+            }
+
+            loadToCharacter.Checked = _settings.LoginUpToCharacter;
+            checkBoxSetTitleClient.Checked = true;
         }
 
-        private void mainClientPathButton_Click(object sender, EventArgs e)
+        private void MainClientPathButton_Click(object sender, EventArgs e)
         {
-            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            this.mainClientTextBox.Text = this.openFileDialog1.FileName;
-            PsMMainForm._settings.MainLineageClientPath = this.openFileDialog1.FileName;
-            if (!string.IsNullOrEmpty(this.mainClientTextBox.Text))
-                PsMMainForm.isClientSet = true;
+            mainClientTextBox.Text = openFileDialog1.FileName;
+            _settings.MainLineageClientPath = openFileDialog1.FileName;
         }
 
-        private void altClientSet_Click(object sender, EventArgs e)
+        private void AltClientSet_Click(object sender, EventArgs e)
         {
-            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-
-            if (string.IsNullOrEmpty(this.openFileDialog1.FileName)
-                && !string.IsNullOrEmpty(PsMMainForm._settings.MainLineageClientPath))
+            if (string.IsNullOrEmpty(openFileDialog1.FileName) && !string.IsNullOrEmpty(_settings.MainLineageClientPath))
             {
-                PsMMainForm._settings.AlternativeLineageClientPath = PsMMainForm._settings.MainLineageClientPath;
+                _settings.AlternativeLineageClientPath = _settings.MainLineageClientPath;
             }
             else
             {
-                PsMMainForm._settings.AlternativeLineageClientPath = this.openFileDialog1.FileName;
+                _settings.AlternativeLineageClientPath = openFileDialog1.FileName;
             }
-            this.altClientTextBox.Text = PsMMainForm._settings.AlternativeLineageClientPath;
-
-            if (!string.IsNullOrEmpty(this.altClientTextBox.Text))
-                PsMMainForm.isClientSet = true;
+            altClientTextBox.Text = _settings.AlternativeLineageClientPath;
         }
 
         private void CancelOption_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void saveOptions_Click(object sender, EventArgs e)
+        private void SaveOptions_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.mainClientTextBox.Text)
-                && string.IsNullOrEmpty(this.altClientTextBox.Text))
+            if (string.IsNullOrEmpty(mainClientTextBox.Text)
+                && string.IsNullOrEmpty(altClientTextBox.Text))
             {
                 MessageBox.Show(Strings.EmptyClientsPath);
                 return;
             }
 
-            if (!string.IsNullOrEmpty(this.mainClientTextBox.Text))
-                PsMMainForm._settings.MainLineageClientPath = this.mainClientTextBox.Text;
-            if (!string.IsNullOrEmpty(this.altClientTextBox.Text))
-                PsMMainForm._settings.AlternativeLineageClientPath = this.altClientTextBox.Text;
+            if (!string.IsNullOrEmpty(mainClientTextBox.Text))
+            {
+                _settings.MainLineageClientPath = mainClientTextBox.Text;
+            }
 
-            PsMMainForm._settings.RenameClientWindow = true; //this.checkBoxSetTitleClient.Checked;
-            PsMMainForm._settings.LoginUpToCharacter = this.loadToCharacter.Checked;
+            if (!string.IsNullOrEmpty(altClientTextBox.Text))
+            {
+                _settings.AlternativeLineageClientPath = altClientTextBox.Text;
+            }
 
-            PsMMainForm._jsonFileUtility.SaveFile(PsMMainForm._settingsPath, PsMMainForm._settings);
-            this.Close();
+            _settings.RenameClientWindow = true;
+            _settings.LoginUpToCharacter = loadToCharacter.Checked;
+
+            _jsonFileUtility.SaveFile(Consts.SettingsPath, _settings);
+            Close();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.checkBoxSetTitleClient.Checked)
+            if (checkBoxSetTitleClient.Checked)
+            {
                 MessageBox.Show(Strings.WindowTitleInfo, "Info");
+            }
 
-            PsMMainForm._settings.RenameClientWindow = this.checkBoxSetTitleClient.Checked;
+            _settings.RenameClientWindow = checkBoxSetTitleClient.Checked;
         }
 
-        private void loadToCharacter_CheckedChanged(object sender, EventArgs e)
+        private void LoadToCharacter_CheckedChanged(object sender, EventArgs e)
         {
-            PsMMainForm._settings.LoginUpToCharacter = loadToCharacter.Checked;
+            _settings.LoginUpToCharacter = loadToCharacter.Checked;
         }
     }
 }

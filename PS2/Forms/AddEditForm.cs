@@ -2,37 +2,30 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace PS2
 {
     public partial class AddEditForm : Form
     {
-        public List<Account> editAccounts = new List<Account>();
-        private List<String> groupsList = new List<String>();
+        private readonly List<Account> _accounts;
 
-        InputLanguage original;
-        public AddEditForm()
+        public List<Account> EditAccounts = new List<Account>();
+        private List<string> _groupsList = new List<string>();
+        private InputLanguage _original;
+
+        public AddEditForm(List<Account> accounts)
         {
+            _accounts = accounts;
+
             InitializeComponent();
             occupationComboBox.SelectedIndex = 0;
-            
         }
 
-        private List<String> getGroupsList() { 
-            List<String> groups = new List<String>();
-
-            foreach (Account account in PsMMainForm._accounts) { 
-                if(!groups.Contains(account.Group) && !string.IsNullOrEmpty(account.Group))
-                    groups.Add(account.Group);
-            }
-            return groups;
-        }
-
-        public AddEditForm(Account toEdit)
+        public AddEditForm(List<Account> accounts, Account toEdit)
         {
+            _accounts = accounts;
+
             InitializeComponent();
 
             textBoxGroup.Text = toEdit.Group;
@@ -40,25 +33,30 @@ namespace PS2
             GamePasswordTextBox.Text = toEdit.GamePassword;
             DisplayNameTextBox.Text = toEdit.Name;
 
-            if (!string.IsNullOrEmpty(toEdit.Description))
-                DescriptionTextBox.Text = toEdit.Description;
-            else
-            {
-                DescriptionTextBox.Text = "";
-            }
+            DescriptionTextBox.Text = !string.IsNullOrEmpty(toEdit.Description) ? toEdit.Description : "";
 
-            int occupIndex = occupationComboBox.Items.IndexOf(toEdit.Occupation);
-            if (occupIndex != -1)
-                occupationComboBox.SelectedIndex = occupIndex;
-            else
-                occupationComboBox.SelectedIndex = 0;
+            var occupIndex = occupationComboBox.Items.IndexOf(toEdit.Occupation);
+            occupationComboBox.SelectedIndex = occupIndex != -1 ? occupIndex : 0;
 
             usealtClientCheckBox.Checked = toEdit.UseAltClientPath;
             saveAndAddMore.Enabled = false;
         }
 
+        private List<string> GetGroupsList()
+        {
+            var groups = new List<string>();
 
-        private void saveAndAddMore_Click(object sender, EventArgs e)
+            foreach (Account account in _accounts)
+            {
+                if (!groups.Contains(account.Group) && !string.IsNullOrEmpty(account.Group))
+                {
+                    groups.Add(account.Group);
+                }
+            }
+            return groups;
+        }
+
+        private void SaveAndAddMore_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(GameLoginTextBox.Text)
                 || string.IsNullOrEmpty(GamePasswordTextBox.Text)
@@ -69,20 +67,15 @@ namespace PS2
                 return;
             }
 
-            Account acc = new Account(
-                GameLoginTextBox.Text,
-                GamePasswordTextBox.Text,
-                DisplayNameTextBox.Text,
-                DescriptionTextBox.Text,
-                occupationComboBox.SelectedItem.ToString(),
-                textBoxGroup.Text,
-                usealtClientCheckBox.Checked
-                );
+            Account acc = GetAccountModel();
 
-            if (!editAccounts.Contains(acc))
-                editAccounts.Add(acc);
-            else {
-                editAccounts[editAccounts.IndexOf(acc)] = acc;
+            if (!EditAccounts.Contains(acc))
+            {
+                EditAccounts.Add(acc);
+            }
+            else
+            {
+                EditAccounts[EditAccounts.IndexOf(acc)] = acc;
             }
 
             GameLoginTextBox.Clear();
@@ -93,122 +86,128 @@ namespace PS2
             textBoxGroup.Clear();
             usealtClientCheckBox.Checked = false;
 
-            MessageBox.Show(acc.ToString() + Strings.saveAndMore, "Info");
+            MessageBox.Show("Name:\t\t" + acc.Name + "\n" +
+                   "Occupation:\t " + acc.Occupation + "\n" +
+                   "Description: \t" + acc.Description +
+                   Strings.saveAndMore, "Info");
         }
 
-        private void saveAndclose_Click(object sender, EventArgs e)
+        private Account GetAccountModel()
+        {
+            return new Account()
+            {
+                GameAccount = GameLoginTextBox.Text,
+                GamePassword = GamePasswordTextBox.Text,
+                Name = DisplayNameTextBox.Text,
+                Description = DescriptionTextBox.Text,
+                Occupation = occupationComboBox.SelectedItem.ToString(),
+                Group = textBoxGroup.Text,
+                UseAltClientPath = usealtClientCheckBox.Checked
+            };
+        }
+
+        private void SaveAndclose_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(GameLoginTextBox.Text)
                 || string.IsNullOrEmpty(GamePasswordTextBox.Text)
-                || string.IsNullOrEmpty(DisplayNameTextBox.Text)) {
-
+                || string.IsNullOrEmpty(DisplayNameTextBox.Text))
+            {
                 MessageBox.Show(Strings.EmptyEntry, "Error");
                 return;
             }
-            
-            Account acc = new Account(
-                GameLoginTextBox.Text,
-                GamePasswordTextBox.Text,
-                DisplayNameTextBox.Text,
-                DescriptionTextBox.Text,
-                occupationComboBox.SelectedItem.ToString(),
-                textBoxGroup.Text,
-                usealtClientCheckBox.Checked
-                );
 
-            editAccounts.Add(acc);
+            EditAccounts.Add(GetAccountModel());
 
-            this.Close();
+            Close();
         }
 
         private void GameLoginTextBox_Enter(object sender, EventArgs e)
         {
-            setEUForInput();
+            SetEUForInput();
         }
 
         private void GameLoginTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(this.GameLoginTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
+            if (!Regex.IsMatch(GameLoginTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
-                this.GameLoginTextBox.Text = "";
-                this.GameLoginTextBox.Focus();
+                AddEditForm addEditForm = this;
+                addEditForm.GameLoginTextBox.Text = "";
+                addEditForm.GameLoginTextBox.Focus();
             }
-            rollbackInputToOrigin();
+            RollbackInputToOrigin();
         }
 
         private void GamePasswordTextBox_Enter(object sender, EventArgs e)
         {
-            setEUForInput();
+            SetEUForInput();
         }
 
         private void GamePasswordTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(this.GamePasswordTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
+            if (!Regex.IsMatch(GamePasswordTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
-                this.GamePasswordTextBox.Text = "";
-                this.GamePasswordTextBox.Focus();
+                GamePasswordTextBox.Text = "";
+                GamePasswordTextBox.Focus();
             }
 
-            rollbackInputToOrigin();
+            RollbackInputToOrigin();
         }
 
-        private void occupationComboBox_Enter(object sender, EventArgs e)
+        private void OccupationComboBox_Enter(object sender, EventArgs e)
         {
-            setEUForInput();
+            SetEUForInput();
         }
 
-        private void occupationComboBox_Leave(object sender, EventArgs e)
+        private void OccupationComboBox_Leave(object sender, EventArgs e)
         {
-            rollbackInputToOrigin();
+            RollbackInputToOrigin();
         }
 
-        private void setEUForInput()
+        private void SetEUForInput()
         {
-            original = InputLanguage.CurrentInputLanguage;
+            _original = InputLanguage.CurrentInputLanguage;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(new CultureInfo("en-us"));
         }
-        private void rollbackInputToOrigin()
+        private void RollbackInputToOrigin()
         {
-            InputLanguage.CurrentInputLanguage = original;
+            InputLanguage.CurrentInputLanguage = _original;
         }
 
         private void DisplayNameTextBox_Enter(object sender, EventArgs e)
         {
-            setEUForInput();
+            SetEUForInput();
         }
 
         private void DisplayNameTextBox_Leave(object sender, EventArgs e)
         {
-
-            if (!Regex.IsMatch(this.DisplayNameTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
+            if (!Regex.IsMatch(DisplayNameTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
-                this.DisplayNameTextBox.Text = "";
-                this.DisplayNameTextBox.Focus();
+                DisplayNameTextBox.Text = "";
+                DisplayNameTextBox.Focus();
             }
-            rollbackInputToOrigin();
+            RollbackInputToOrigin();
         }
 
-        
         private void AddEditForm_Load(object sender, EventArgs e)
         {
-            this.groupsList = getGroupsList();
+            _groupsList = GetGroupsList();
             AutoCompleteStringCollection col = new AutoCompleteStringCollection();
-            foreach (string group in groupsList)
+            foreach (string group in _groupsList)
             {
-               col.Add(group);
+                col.Add(group);
             }
 
             textBoxGroup.AutoCompleteCustomSource = col;
         }
 
-        private void textBoxGroup_TextChanged(object sender, EventArgs e)
+        private void TextBoxGroup_TextChanged(object sender, EventArgs e)
         {
-            if (!groupsList.Contains(textBoxGroup.Text))
+            if (!_groupsList.Contains(textBoxGroup.Text))
             {
-                groupsList.Add(textBoxGroup.Text);
+                _groupsList.Add(textBoxGroup.Text);
             }
         }
     }
