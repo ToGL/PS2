@@ -39,6 +39,7 @@ namespace PS2
             this.olvColumnGroup = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnOccupation = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumndescription = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnSound = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useAlternativeClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,13 +79,15 @@ namespace PS2
             this.accountsListView.AllColumns.Add(this.olvColumnGroup);
             this.accountsListView.AllColumns.Add(this.olvColumnOccupation);
             this.accountsListView.AllColumns.Add(this.olvColumndescription);
+            this.accountsListView.AllColumns.Add(this.olvColumnSound);
             this.accountsListView.CellEditUseWholeCell = false;
             this.accountsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumnName,
             this.altClientcolumn,
             this.olvColumnGroup,
             this.olvColumnOccupation,
-            this.olvColumndescription});
+            this.olvColumndescription,
+            this.olvColumnSound});
             this.accountsListView.ContextMenuStrip = this.contextMenuStrip1;
             this.accountsListView.CopySelectionOnControlC = false;
             this.accountsListView.CopySelectionOnControlCUsesDragSource = false;
@@ -128,6 +131,8 @@ namespace PS2
             this.altClientcolumn.CheckBoxes = true;
             this.altClientcolumn.Groupable = false;
             this.altClientcolumn.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.altClientcolumn.MaximumWidth = 50;
+            this.altClientcolumn.MinimumWidth = 50;
             this.altClientcolumn.Searchable = false;
             resources.ApplyResources(this.altClientcolumn, "altClientcolumn");
             this.altClientcolumn.WordWrap = true;
@@ -136,24 +141,37 @@ namespace PS2
             // 
             this.olvColumnGroup.AspectName = "Group";
             resources.ApplyResources(this.olvColumnGroup, "olvColumnGroup");
+            this.olvColumnGroup.MinimumWidth = 80;
             // 
             // olvColumnOccupation
             // 
             this.olvColumnOccupation.AspectName = "Occupation";
             this.olvColumnOccupation.CellEditUseWholeCell = true;
-            this.olvColumnOccupation.IsEditable = false;
-            this.olvColumnOccupation.MaximumWidth = 140;
-            this.olvColumnOccupation.MinimumWidth = 140;
-            this.olvColumnOccupation.Searchable = false;
             resources.ApplyResources(this.olvColumnOccupation, "olvColumnOccupation");
+            this.olvColumnOccupation.IsEditable = false;
+            this.olvColumnOccupation.MaximumWidth = 120;
+            this.olvColumnOccupation.MinimumWidth = 120;
+            this.olvColumnOccupation.Searchable = false;
             // 
             // olvColumndescription
             // 
             this.olvColumndescription.AspectName = "Description";
             this.olvColumndescription.CellEditUseWholeCell = true;
+            resources.ApplyResources(this.olvColumndescription, "olvColumndescription");
             this.olvColumndescription.FillsFreeSpace = true;
             this.olvColumndescription.IsEditable = false;
-            resources.ApplyResources(this.olvColumndescription, "olvColumndescription");
+            // 
+            // olvColumnSound
+            // 
+            this.olvColumnSound.AspectName = "Sound";
+            this.olvColumnSound.AutoCompleteEditor = false;
+            this.olvColumnSound.AutoCompleteEditorMode = System.Windows.Forms.AutoCompleteMode.None;
+            this.olvColumnSound.CheckBoxes = true;
+            resources.ApplyResources(this.olvColumnSound, "olvColumnSound");
+            this.olvColumnSound.Groupable = false;
+            this.olvColumnSound.HeaderTextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.olvColumnSound.Searchable = false;
+            this.olvColumnSound.WordWrap = true;
             // 
             // contextMenuStrip1
             // 
@@ -396,6 +414,7 @@ namespace PS2
         private System.Windows.Forms.ComboBox langComBox;
         private System.Windows.Forms.TextBox searchTextBox;
         private OLVColumn olvColumnGroup;
+        private OLVColumn olvColumnSound;
     }
 }
 

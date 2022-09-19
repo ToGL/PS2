@@ -8,6 +8,7 @@
         public string GamePassword { get; set; }
         public string Occupation { get; set; }
         public string Group { get; set; }
+        public bool Sound { get; set; }
         public bool UseAltClientPath { get; set; }
     }
 }

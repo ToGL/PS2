@@ -137,11 +137,20 @@
   <data name="altClientcolumn.ToolTipText" xml:space="preserve">
     <value>Use Alternative client if checked</value>
   </data>
+  <data name="altClientcolumn.Width" type="System.Int32, mscorlib">
+    <value>50</value>
+  </data>
+  <data name="olvColumnGroup.DisplayIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
   <data name="olvColumnGroup.Text" xml:space="preserve">
     <value>Group</value>
   </data>
   <data name="olvColumnGroup.Width" type="System.Int32, mscorlib">
-    <value>120</value>
+    <value>80</value>
+  </data>
+  <data name="olvColumnOccupation.DisplayIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
   <data name="olvColumnOccupation.Text" xml:space="preserve">
     <value>Occupation</value>
@@ -150,13 +159,31 @@
     <value>Center</value>
   </data>
   <data name="olvColumnOccupation.Width" type="System.Int32, mscorlib">
-    <value>140</value>
+    <value>120</value>
+  </data>
+  <data name="olvColumndescription.DisplayIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
   <data name="olvColumndescription.Text" xml:space="preserve">
     <value>Description</value>
   </data>
   <data name="olvColumndescription.Width" type="System.Int32, mscorlib">
-    <value>61</value>
+    <value>80</value>
+  </data>
+  <data name="olvColumnSound.DisplayIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="olvColumnSound.Text" xml:space="preserve">
+    <value>Sound</value>
+  </data>
+  <data name="olvColumnSound.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="olvColumnSound.ToolTipText" xml:space="preserve">
+    <value>Sound of Window</value>
+  </data>
+  <data name="olvColumnSound.Width" type="System.Int32, mscorlib">
+    <value>50</value>
   </data>
   <data name="accountsListView.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -626,6 +653,12 @@
     <value>olvColumndescription</value>
   </data>
   <data name="&gt;&gt;olvColumndescription.Type" xml:space="preserve">
+    <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
+  </data>
+  <data name="&gt;&gt;olvColumnSound.Name" xml:space="preserve">
+    <value>olvColumnSound</value>
+  </data>
+  <data name="&gt;&gt;olvColumnSound.Type" xml:space="preserve">
     <value>BrightIdeasSoftware.OLVColumn, ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4</value>
   </data>
   <data name="&gt;&gt;addNewToolStripMenuItem.Name" xml:space="preserve">

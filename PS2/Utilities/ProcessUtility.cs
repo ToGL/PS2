@@ -58,6 +58,8 @@ namespace PS2.Utilities
                 new Thread(delegate () { InputCreds(hWnd, acc, settings); }).Start();
             }
 
+            VolumeMixer.SetApplicationMute(proc.Id, !acc.Sound);
+
             if (settings.RenameClientWindow)
             {
                 ChangeProductNameInL2int("Lineage II", clientToRun);
