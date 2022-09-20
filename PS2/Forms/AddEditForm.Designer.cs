@@ -132,8 +132,8 @@
             resources.GetString("occupationComboBox.Items30"),
             resources.GetString("occupationComboBox.Items31")});
             this.occupationComboBox.Name = "occupationComboBox";
-            this.occupationComboBox.Enter += new System.EventHandler(this.occupationComboBox_Enter);
-            this.occupationComboBox.Leave += new System.EventHandler(this.occupationComboBox_Leave);
+            this.occupationComboBox.Enter += new System.EventHandler(this.OccupationComboBox_Enter);
+            this.occupationComboBox.Leave += new System.EventHandler(this.OccupationComboBox_Leave);
             // 
             // label5
             // 
@@ -151,14 +151,14 @@
             resources.ApplyResources(this.saveAndclose, "saveAndclose");
             this.saveAndclose.Name = "saveAndclose";
             this.saveAndclose.UseVisualStyleBackColor = true;
-            this.saveAndclose.Click += new System.EventHandler(this.saveAndclose_Click);
+            this.saveAndclose.Click += new System.EventHandler(this.SaveAndclose_Click);
             // 
             // saveAndAddMore
             // 
             resources.ApplyResources(this.saveAndAddMore, "saveAndAddMore");
             this.saveAndAddMore.Name = "saveAndAddMore";
             this.saveAndAddMore.UseVisualStyleBackColor = true;
-            this.saveAndAddMore.Click += new System.EventHandler(this.saveAndAddMore_Click);
+            this.saveAndAddMore.Click += new System.EventHandler(this.SaveAndAddMore_Click);
             // 
             // labelGroup
             // 
@@ -171,7 +171,7 @@
             this.textBoxGroup.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.textBoxGroup.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.textBoxGroup.Name = "textBoxGroup";
-            this.textBoxGroup.TextChanged += new System.EventHandler(this.textBoxGroup_TextChanged);
+            this.textBoxGroup.TextChanged += new System.EventHandler(this.TextBoxGroup_TextChanged);
             // 
             // AddEditForm
             // 

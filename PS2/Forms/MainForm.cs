@@ -3,46 +3,33 @@ using PS2.Model;
 using PS2.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace PS2
 {
     public partial class PsMMainForm : Form
     {
-        static public readonly JsonFileUtility _jsonFileUtility = new JsonFileUtility();
-        static public readonly string _settingsPath = @"./settings.json";
-        static public readonly string _credsPath = @"./creds_v2.json";
+        private readonly JsonFileUtility _jsonFileUtility = new JsonFileUtility();
+        private readonly ProcessUtility _processUtility = new ProcessUtility();
+        private readonly CsvReaderUtility _csvReaderUtility = new CsvReaderUtility();
 
-        static public bool isClientSet = false;
+        private readonly List<Account> _accounts = new List<Account>();
+        private Settings _settings = new Settings();
 
-        static public Settings _settings = new Settings();
-        static public List<Account> _accounts = Account.GetAccounts();
-       
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("user32.dll")]
-        private static extern bool PostMessage(IntPtr hWnd,UInt32 Msg,Int32 wParam,Int32 lParam);
-
-        [DllImport("user32.dll")]
-        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+        public bool IsClientSet
+        {
+            get => !string.IsNullOrEmpty(_settings.MainLineageClientPath) || !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath);
+        }
 
         public PsMMainForm()
         {
-            //Load last selected language based on application propertie Language (English is default)
             if (!string.IsNullOrEmpty(Properties.Settings.Default.Language))
             {
-                System.Threading.Thread.CurrentThread.CurrentUICulture =
-                    System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
-                System.Threading.Thread.CurrentThread.CurrentCulture =
-                    System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
+                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             }
 
             InitializeComponent();
@@ -50,9 +37,9 @@ namespace PS2
 
         private void PsMMainForm_Load(object sender, EventArgs e)
         {
-            langComBox.DataSource = new System.Globalization.CultureInfo[] {
-                System.Globalization.CultureInfo.GetCultureInfo("ru-RU"),
-                System.Globalization.CultureInfo.GetCultureInfo("en-US"),
+            langComBox.DataSource = new CultureInfo[] {
+                CultureInfo.GetCultureInfo("ru-RU"),
+                CultureInfo.GetCultureInfo("en-US"),
             };
             langComBox.SelectedIndex = 0;
             langComBox.DisplayMember = "NativeName";
@@ -63,515 +50,305 @@ namespace PS2
                 langComBox.SelectedValue = Properties.Settings.Default.Language;
             }
 
-            LoadOptions();
+            LoadSettings();
             LoadAccounts();
 
-            this.objectListView1.SetObjects(_accounts);
-            this.objectListView1.ShowGroups = false;
-            this.objectListView1.RefreshObjects(_accounts);
+            accountsListView.SetObjects(_accounts);
+            accountsListView.ShowGroups = false;
+            accountsListView.RefreshObjects(_accounts);
 
-           // this.altClientcolumn.IsVisible = Properties.Settings.Default.UseAltClientColumn;
-           // this.olvColumnOccupation.IsVisible = Properties.Settings.Default.OccupationColumn;
-           // this.olvColumndescription.IsVisible = Properties.Settings.Default.Description;
-
-
-            this.objectListView1.RebuildColumns();
-            this.objectListView1.Unsort();
-            if (_settings.listState != null)
-                this.objectListView1.RestoreState(_settings.listState);
-
+            accountsListView.RebuildColumns();
+            accountsListView.Unsort();
+            if (_settings.ListState != null)
+            {
+                accountsListView.RestoreState(_settings.ListState);
+            }
         }
 
-        private void addNewAccountViaForm()
+        private void AddNewAccountViaForm()
         {
-            AddEditForm addEdit = new AddEditForm();
+            var addEdit = new AddEditForm(_accounts);
             addEdit.ShowDialog();
 
-            foreach (Account acc in addEdit.editAccounts)
+            foreach (var acc in addEdit.EditAccounts)
             {
-                if (!_accounts.Contains(acc))
+                var index = _accounts.FindIndex(x => x.GameAccount == acc.GameAccount);
+                if (index > -1)
                 {
-                    _accounts.Add(acc);
-                    objectListView1.AddObject(acc);
+                    _accounts[index] = acc;
+                    accountsListView.UpdateObject(acc);
                 }
                 else
                 {
-                    _accounts[_accounts.IndexOf(acc)] = acc;
-                    objectListView1.UpdateObject(acc);
+                    _accounts.Add(acc);
+                    accountsListView.AddObject(acc);
                 }
             }
 
-            this.objectListView1.RefreshObjects(_accounts);
-            this.objectListView1.SelectObjects(addEdit.editAccounts);
-            addEdit.editAccounts.Clear();
+            accountsListView.RefreshObjects(_accounts);
+            accountsListView.SelectObjects(addEdit.EditAccounts);
+            addEdit.EditAccounts.Clear();
         }
-        private void editAccountViaForm()
+
+        private void EditAccountViaForm()
         {
-            Account tmpAcc = (Account)objectListView1.SelectedObject;
-            if (tmpAcc != null)
-            {
-                AddEditForm addEdit = new AddEditForm(tmpAcc);
-                addEdit.ShowDialog();
-
-
-                foreach (Account acc in addEdit.editAccounts)
-                {
-                    if (_accounts.Contains(tmpAcc))
-                    {
-                        _accounts[_accounts.IndexOf(tmpAcc)] = acc;
-                    }
-                }
-                this.objectListView1.SetObjects(_accounts);
-                this.objectListView1.RefreshObjects(_accounts);
-                addEdit.editAccounts.Clear();
-            }
-            else
+            var tmpAcc = (Account)accountsListView.SelectedObject;
+            if (tmpAcc == null)
             {
                 MessageBox.Show(Strings.EditOnceAtTime, "Information");
+                return;
             }
+
+            var addEdit = new AddEditForm(_accounts, tmpAcc);
+            addEdit.ShowDialog();
+
+            foreach (var acc in addEdit.EditAccounts)
+            {
+                var index = _accounts.FindIndex(x => x.GameAccount == acc.GameAccount);
+                if (index > -1)
+                {
+                    _accounts[index] = acc;
+                }
+            }
+            accountsListView.SetObjects(_accounts);
+            accountsListView.RefreshObjects(_accounts);
+            addEdit.EditAccounts.Clear();
         }
-        private void deleteSelectedAccounts()
+
+        private void DeleteSelectedAccounts()
         {
             string nameTodelete = "";
-            if (objectListView1.SelectedObjects.Count > 1)
+            if (accountsListView.SelectedObjects.Count > 1)
             {
-                foreach (Account acc in objectListView1.SelectedObjects)
+                foreach (Account acc in accountsListView.SelectedObjects)
                 {
-
                     nameTodelete += "\n" + acc.Name;
                 }
             }
 
-            if (objectListView1.SelectedObject != null && objectListView1.SelectedObjects.Count == 1)
+            if (accountsListView.SelectedObject != null && accountsListView.SelectedObjects.Count == 1)
             {
-                nameTodelete = ((Account)objectListView1.SelectedObject).Name;
+                nameTodelete = ((Account)accountsListView.SelectedObject).Name;
             }
-            var confirmResult = MessageBox.Show(nameTodelete,
-                                  "Are you sure to delete: ",
-                                  MessageBoxButtons.YesNo);
+            var confirmResult = MessageBox.Show(nameTodelete, "Are you sure to delete: ", MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {
-                foreach (Account acc in objectListView1.SelectedObjects)
+                foreach (Account acc in accountsListView.SelectedObjects)
                 {
-                    objectListView1.RemoveObject(acc);
+                    accountsListView.RemoveObject(acc);
                     _accounts.Remove(acc);
                 }
             }
 
-
-            objectListView1.RefreshObjects(_accounts);
-
+            accountsListView.RefreshObjects(_accounts);
         }
 
-
-        private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (objectListView1.SelectedObjects.Count > 0)
-                Clipboard.SetText(_jsonFileUtility.GetJsonString(objectListView1.SelectedObjects));
+            if (accountsListView.SelectedObjects.Count > 0)
+            {
+                Clipboard.SetText(_jsonFileUtility.GetJsonString(accountsListView.SelectedObjects));
+            }
         }
 
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("...that's all I can say about Vietnam.", "Forest Gump");
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _jsonFileUtility.SaveFile(_credsPath, _accounts);
+            _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
 
-            this.Close();
+            Close();
         }
 
-
-
-        private void importAccountsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportAccountsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "Accounts Files (CSV JSON)|*.CSV;*.JSON";
-            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            fileDialog.Filter = "Accounts Files (CSV JSON)|*.CSV;*.JSON";
+            if (fileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
 
-            if (Path.GetExtension(openFileDialog1.FileName) == ".csv")
+            if (Path.GetExtension(fileDialog.FileName) == ".csv")
             {
-                readFromCSV(openFileDialog1.FileName);
+                ReadFromCSV(fileDialog.FileName);
             }
-            else if (Path.GetExtension(openFileDialog1.FileName) == ".json")
+            else if (Path.GetExtension(fileDialog.FileName) == ".json")
             {
-                List<Account> toAdd = _jsonFileUtility.ReadFile<List<Account>>(openFileDialog1.FileName);
-
-                foreach (Account acc in toAdd)
-                {
-                    if (_accounts.Contains(acc))
-                    {
-                        _accounts[_accounts.IndexOf(acc)] = acc;
-                    }
-                    else
-                    {
-                        _accounts.Add(acc);
-                    }
-                }
-                objectListView1.SetObjects(_accounts);
-                objectListView1.RefreshObjects(_accounts);
-                objectListView1.SelectObjects(toAdd);
-
+                var toAdd = _jsonFileUtility.ReadFile<List<Account>>(fileDialog.FileName);
+                UpdateView(toAdd);
             }
-
-
         }
 
-        private void readFromCSV(string fileName)
+        private void ReadFromCSV(string fileName)
         {
+            var toAdd = _csvReaderUtility.ReadAccounts(fileName);
+            UpdateView(toAdd);
+        }
 
-            System.IO.StreamReader file = new System.IO.StreamReader(fileName);
-            String line;
-            List<Account> toAdd = new List<Account>();
-            while ((line = file.ReadLine()) != null)
+        private void UpdateView(List<Account> newAccounts)
+        {
+            foreach (var acc in newAccounts)
             {
-                int firstComma = line.IndexOf(',');
-                int secondComma = line.IndexOf(',', firstComma + 1);
-                Account acc = new Account();
-                acc.GameAccount = line.Substring(0, firstComma);
-                acc.GamePassword = line.Substring(firstComma + 1, secondComma - firstComma - 1);
-                acc.Name = line.Substring(secondComma + 1);
-                acc.Description = "";
-                acc.Occupation = "not set";
-                acc.Group = "";
-                acc.UseAltClientPath = false;
-
-                toAdd.Add(acc);
-
-
-            }
-            foreach (Account acc in toAdd)
-            {
-                if (_accounts.Contains(acc))
+                var index = _accounts.FindIndex(x => x.GameAccount == acc.GameAccount);
+                if (index > -1)
                 {
-                    _accounts[_accounts.IndexOf(acc)] = acc;
+                    _accounts[index] = acc;
                 }
                 else
                 {
                     _accounts.Add(acc);
                 }
             }
-
-            objectListView1.SetObjects(_accounts);
-            objectListView1.RefreshObjects(_accounts);
-            objectListView1.SelectObjects(toAdd);
-
-            file.Close();
+            accountsListView.SetObjects(_accounts);
+            accountsListView.RefreshObjects(_accounts);
+            accountsListView.SelectObjects(newAccounts);
         }
 
-
-        private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form opt = new OptionsForm();
+            var opt = new OptionsForm(_settings);
             opt.ShowDialog();
         }
 
-        private void objectListView1_CellRightClick(object sender, CellRightClickEventArgs e)
+        private void AccountsListView_CellRightClick(object sender, CellRightClickEventArgs e)
         {
-            if (objectListView1.SelectedItems.Count >= 2
-                && isClientSet)
-            {
-                runBULKToolStripMenuItem.Enabled = true;
-            }
-            if (objectListView1.Items.Count > 0
-                && isClientSet)
-            {
-                runToolStripMenuItem.Enabled = true;
-            }
-            if (objectListView1.SelectedObjects.Count >= 2)
-            {
-                useAlternativeClientToolStripMenuItem.Enabled = false;
-                editToolStripMenuItem.Enabled = false;
-                editToolStripMenuItem1.Enabled = false;
-            }
-            else
-            {
-                useAlternativeClientToolStripMenuItem.Enabled = true;
-                editToolStripMenuItem.Enabled = true;
-                editToolStripMenuItem1.Enabled = true;
+            runBULKToolStripMenuItem.Enabled = accountsListView.SelectedItems.Count >= 2 && IsClientSet;
+            runToolStripMenuItem.Enabled = accountsListView.Items.Count > 0 && IsClientSet;
 
-            }
-            if (objectListView1.SelectedObjects.Count == 1)
+            useAlternativeClientToolStripMenuItem.Enabled = accountsListView.SelectedObjects.Count < 2;
+            editToolStripMenuItem.Enabled = accountsListView.SelectedObjects.Count < 2;
+            editToolStripMenuItem1.Enabled = accountsListView.SelectedObjects.Count < 2;
+
+            if (accountsListView.SelectedObjects.Count == 1)
             {
-                useAlternativeClientToolStripMenuItem.Checked = ((Account)objectListView1.SelectedObject).UseAltClientPath;
+                useAlternativeClientToolStripMenuItem.Checked = ((Account)accountsListView.SelectedObject).UseAltClientPath;
             }
         }
 
-        private void loadFromClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadFromClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            List<Account> tmp = _jsonFileUtility.GetObjectFromJsonString<List<Account>>(Clipboard.GetText());
+            var accounts = _jsonFileUtility.GetObjectFromJsonString<List<Account>>(Clipboard.GetText());
 
-            if (tmp != null)
+            if (accounts == null)
             {
-                foreach (Account acc in tmp)
+                return;
+            }
+
+            foreach (var acc in accounts)
+            {
+                if (_accounts.Contains(acc))
                 {
-                    if (_accounts.Contains(acc))
-                    {
-                        _accounts.Remove(acc);
-                        objectListView1.UpdateObject(acc);
-                    }
-                    _accounts.Add(acc);
-                    objectListView1.AddObject(acc);
+                    _accounts.Remove(acc);
+                    accountsListView.UpdateObject(acc);
                 }
+                _accounts.Add(acc);
+                accountsListView.AddObject(acc);
+            }
 
-                objectListView1.RefreshObjects(_accounts);
-                objectListView1.SelectObjects(tmp);
+            accountsListView.RefreshObjects(_accounts);
+            accountsListView.SelectObjects(accounts);
+        }
+
+        private void UseAlternativeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (accountsListView.SelectedObjects.Count == 1)
+            {
+                ((Account)accountsListView.SelectedObject).UseAltClientPath = useAlternativeClientToolStripMenuItem.Checked;
+                accountsListView.RefreshObjects(accountsListView.SelectedObjects);
             }
         }
 
-        private void useAlternativeClientToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoadSettings()
         {
-            if (objectListView1.SelectedObjects.Count == 1)
+            if (File.Exists(Consts.SettingsPath))
             {
-                ((Account)objectListView1.SelectedObject).UseAltClientPath = useAlternativeClientToolStripMenuItem.Checked;
-                objectListView1.RefreshObjects(objectListView1.SelectedObjects);
+                _settings = _jsonFileUtility.ReadFile<Settings>(Consts.SettingsPath);
+                return;
             }
-        }
 
-        private void LoadOptions()
-        {
-            if (!File.Exists(_settingsPath))
+            string lineageWindowTitle = "Lineage";
+            string mainClientPath = "";
+
+            if (File.Exists(Consts.SettingsIniPath))
             {
-                string lineageWindowTitle = "Lineage";
-                string mainClientPath = "";
+                StreamReader file = new StreamReader(Consts.SettingsIniPath);
 
-                if (System.IO.File.Exists(@"./settings.ini"))
+                try
                 {
-                    System.IO.StreamReader file = new System.IO.StreamReader(@"./settings.ini");
-
-                    try
+                    string line;
+                    while ((line = file.ReadLine()) != null)
                     {
-                        String line;
-                        while ((line = file.ReadLine()) != null)
+                        if (line.StartsWith("lineageWindowTitle="))
                         {
-                            if (line.StartsWith("lineageWindowTitle="))
-                            {
-                                lineageWindowTitle = line.Substring("lineageWindowTitle=".Length);
-                            }
-                            if (line.StartsWith("lineagePath="))
-                            {
-                                mainClientPath = line.Substring("lineagePath=".Length);
-                            }
+                            lineageWindowTitle = line.Substring("lineageWindowTitle=".Length);
+                        }
+                        if (line.StartsWith("lineagePath="))
+                        {
+                            mainClientPath = line.Substring("lineagePath=".Length);
                         }
                     }
-                    catch
-                    {
-                        MessageBox.Show(Strings.ErrorLoadOldSettings, "Error");
-                        Environment.Exit(1);
-                    }
-                    finally
-                    {
-                        file.Close();
-                    }
                 }
-                _settings.LineageWindowTitle = lineageWindowTitle;
-                _settings.MainLineageClientPath = mainClientPath;
-                _settings.AlternativeLineageClientPath = mainClientPath;
-                _settings.RenameClientWindow = true;
-                _settings.LoginUpToCharacter = false;
-                _settings.listState = new byte[0];
-
-                if (!string.IsNullOrEmpty(mainClientPath))
-                    isClientSet = true;
-
-                _jsonFileUtility.SaveFile(_settingsPath, _settings);
-            }
-            else
-            {
-                _settings = _jsonFileUtility.ReadFile<Settings>(_settingsPath);
-
-                if (!string.IsNullOrEmpty(_settings.MainLineageClientPath)
-                    || !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
+                catch
                 {
-                    isClientSet = true;
+                    MessageBox.Show(Strings.ErrorLoadOldSettings, "Error");
+                    Environment.Exit(1);
+                }
+                finally
+                {
+                    file.Close();
                 }
             }
+            _settings.LineageWindowTitle = lineageWindowTitle;
+            _settings.MainLineageClientPath = mainClientPath;
+            _settings.AlternativeLineageClientPath = mainClientPath;
+            _settings.RenameClientWindow = true;
+            _settings.LoginUpToCharacter = false;
+            _settings.ListState = new byte[0];
+
+            _jsonFileUtility.SaveFile(Consts.SettingsPath, _settings);
         }
 
-        private void inputCreds(IntPtr handle, string LoginToEnter, string PasswordToEnter, string accName)
+        private void RunClient()
         {
-            ShowWindow(handle, 4); // SW_SHOWNOACTIVATE
-            Thread.Sleep(2000);
-
-              //turn off capslock
-              if (IsKeyLocked(Keys.CapsLock))
-              {
-                  const int KEYEVENTF_EXTENDEDKEY = 0x1;
-                  const int KEYEVENTF_KEYUP = 0x2;
-                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
-                  keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
-                  (UIntPtr)0);
-              }
-            /*  if (SetForegroundWindow(handle))
-              {
-                  SendKeys.SendWait("{HOME}");
-                  SendKeys.SendWait("+{END}");
-                  SendKeys.SendWait("{BACKSPACE}");
-                  Thread.Sleep(200);
-              }
-
-              */
-
-
-            const Int32 WM_CHAR = 0x0102;
-            const uint WM_KEYDOWN = 0x0100;
-            const uint WM_KEYUP = 0x0101;
-            const int VK_TAB = 0x09;
-            const int VK_ENTER = 0x0D;
-
-            foreach (char ch in LoginToEnter.ToCharArray()) {
-                PostMessage(handle, WM_CHAR, ch, 0);
-            }
-
-            Thread.Sleep(100);
-
-            PostMessage(handle, WM_KEYDOWN, VK_TAB, 0);
-            PostMessage(handle, WM_KEYUP, VK_TAB, 0);
-
-            Thread.Sleep(100);
-           
-            foreach (char ch in PasswordToEnter.ToCharArray())
-            {
-                PostMessage(handle, WM_CHAR, ch, 0);
-            }
-
-
-            if (_settings.LoginUpToCharacter)
-            {
-                Thread.Sleep(500);
-                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
-                PostMessage(handle, WM_CHAR, VK_ENTER,0);
-                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
-                Thread.Sleep(500);
-                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
-                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
-                PostMessage(handle, WM_KEYUP, VK_ENTER, 0);
-                Thread.Sleep(500);
-                PostMessage(handle, WM_KEYDOWN, VK_ENTER, 0);
-                PostMessage(handle, WM_CHAR, VK_ENTER, 0);
-                PostMessage(handle, WM_KEYUP, VK_ENTER,0);
-            }
-        }
-
-
-
-        private void changeProductNameInL2int(String newProductName, string clientPath)
-        {
-
-            string folder = System.IO.Path.GetDirectoryName(clientPath) + @"\";
-            System.IO.StreamWriter file = new System.IO.StreamWriter(folder + @"l2b.int");
-            file.WriteLine("[General]");
-            file.WriteLine("Start=Lineage II (Starting)");
-            file.WriteLine("Exit=Lineage II (Exiting)");
-            file.WriteLine("Run=Lineage II (Running)");
-            file.WriteLine("Product=" + newProductName + " Lineage II");
-            file.Close();
-
-            var l2encdec = new ProcessStartInfo()
-            {
-                UseShellExecute = true,
-                WorkingDirectory = folder,
-                FileName = "cmd.exe",
-                Arguments = "/c l2encdec.exe -h 111 l2b.int",
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-            Process.Start(l2encdec).WaitForExit();
-            string sourceFile = folder + "enc-l2b.int";
-            string destinationFile = folder + "l2.int";
-
-            System.IO.FileInfo fileInf = new System.IO.FileInfo(sourceFile);
-            if (fileInf.Exists)
-            {
-                fileInf.CopyTo(destinationFile, true);
-            }
-
-        }
-
-        private void runClient()
-        {
-
-            if (objectListView1.SelectedObjects.Count == 0)
+            if (accountsListView.SelectedObjects.Count == 0)
             {
                 MessageBox.Show(Strings.selectToRun);
                 return;
             }
-            if (!isClientSet)
+            if (!IsClientSet)
             {
                 MessageBox.Show(Strings.NoClientSet);
-                Form opt = new OptionsForm();
+                Form opt = new OptionsForm(_settings);
                 opt.ShowDialog();
                 return;
             }
 
-            foreach (Account acc in objectListView1.SelectedObjects)
+            foreach (Account acc in accountsListView.SelectedObjects)
             {
-                string clientToRun;
-                if (string.IsNullOrEmpty(_settings.MainLineageClientPath))
-                    clientToRun = _settings.AlternativeLineageClientPath;
-                else
-                    clientToRun = _settings.MainLineageClientPath;
-
-                if (acc.UseAltClientPath && !string.IsNullOrEmpty(_settings.AlternativeLineageClientPath))
-                    clientToRun = _settings.AlternativeLineageClientPath;
-
-
-                if (_settings.RenameClientWindow)
-                    changeProductNameInL2int(acc.Name, clientToRun);
-
-                Process proc = Process.Start(clientToRun);
-
-                proc.WaitForInputIdle();
-                if (proc.MainWindowTitle.Equals("Warning")) //skip warning
-                {
-                    proc.CloseMainWindow();
-                }
-
-                IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
-                while (hWnd == IntPtr.Zero)
-                {
-                    Thread.Sleep(1000);
-                    hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
-                }
-
-                if (hWnd != IntPtr.Zero)
-                    new Thread(delegate () { inputCreds(hWnd, acc.GameAccount, acc.GamePassword, acc.Name); }).Start();
-
-                if (_settings.RenameClientWindow)
-                    changeProductNameInL2int("Lineage II", clientToRun);
-                //delay to set lineage 2 product back
-                Thread.Sleep(1000);
+                _processUtility.RunProcess(acc, _settings);
             }
         }
 
         private void LoadAccounts()
         {
-            
-            if (!File.Exists(_credsPath))
+            if (!File.Exists(Consts.CredsPath))
             {
-
-                var confirmResult = MessageBox.Show(
-                                      Strings.LoadFromCSVRequest,
-                                      "Question",
-                                      MessageBoxButtons.YesNo);
+                var confirmResult = MessageBox.Show(Strings.LoadFromCSVRequest, "Question", MessageBoxButtons.YesNo);
                 if (confirmResult == DialogResult.Yes)
                 {
-                    openFileDialog1.Filter = "Accounts Files (CSV)|*.CSV";
-                    if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+                    fileDialog.Filter = "Accounts Files (CSV)|*.CSV";
+                    if (fileDialog.ShowDialog() != DialogResult.OK)
                     {
                         return;
                     }
-
-                    readFromCSV(openFileDialog1.FileName);
-
+                    ReadFromCSV(fileDialog.FileName);
                 }
-
                 return;
             }
-            List<Account> toAdd = _jsonFileUtility.ReadFile<List<Account>>(_credsPath);
+            var toAdd = _jsonFileUtility.ReadFile<List<Account>>(Consts.CredsPath);
 
             foreach (Account acc in toAdd)
             {
@@ -580,30 +357,32 @@ namespace PS2
                     _accounts.Remove(acc);
                 }
                 _accounts.Add(acc);
-                objectListView1.UpdateObject(acc);
+                accountsListView.UpdateObject(acc);
             }
 
-            objectListView1.RefreshObjects(_accounts);
-            objectListView1.SelectObjects(toAdd);
+            accountsListView.RefreshObjects(_accounts);
+            accountsListView.SelectObjects(toAdd);
         }
 
         private void PsMMainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _settings.listState = objectListView1.SaveState();
-            _jsonFileUtility.SaveFile(_settingsPath, _settings);
+            _settings.ListState = accountsListView.SaveState();
+            _jsonFileUtility.SaveFile(Consts.SettingsPath, _settings);
 
             if (_accounts.Count > 0)
-                _jsonFileUtility.SaveFile(_credsPath, _accounts);
+            {
+                _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
+            }
         }
 
         private void PsMMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Language = langComBox.SelectedValue.ToString();
-          
+
             Properties.Settings.Default.Save();
         }
 
-        private void langComBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void LangComBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             Properties.Settings.Default.Language = langComBox.SelectedValue.ToString();
             Properties.Settings.Default.Save();
@@ -611,54 +390,61 @@ namespace PS2
             Environment.Exit(0);
         }
 
-
-        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.objectListView1.ModelFilter = TextMatchFilter.Contains(this.objectListView1, searchTextBox.Text);
+            accountsListView.ModelFilter = TextMatchFilter.Contains(accountsListView, searchTextBox.Text);
         }
 
-        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AddToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            addNewAccountViaForm();
+            AddNewAccountViaForm();
         }
 
-        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EditToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editAccountViaForm();
+            EditAccountViaForm();
         }
 
-        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RemoveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            deleteSelectedAccounts();
+            DeleteSelectedAccounts();
         }
 
-        private void objectListView1_DoubleClick(object sender, EventArgs e)
+        private void AccountsListView_DoubleClick(object sender, EventArgs e)
         {
-            runClient();
-        }
-        private void addNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            addNewAccountViaForm();
+            RunClient();
         }
 
-        private void editToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void AddNewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editAccountViaForm();
+            AddNewAccountViaForm();
         }
 
-        private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void EditToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            deleteSelectedAccounts();
-        }
-        private void runToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            runClient();
+            EditAccountViaForm();
         }
 
-        private void runBULKToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RemoveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            runClient();
+            DeleteSelectedAccounts();
+        }
+        private void RunToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunClient();
         }
 
+        private void RunBULKToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunClient();
+        }
+
+        private void AccountsListView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                RunClient();
+            }
+        }
     }
 }

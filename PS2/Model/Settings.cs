@@ -9,7 +9,7 @@
         public bool RenameClientWindow { get; set; } = true;
         public bool LoginUpToCharacter { get; set; }
 
-        public byte[] listState { get; set; }
+        public byte[] ListState { get; set; }
 
     }
 }
