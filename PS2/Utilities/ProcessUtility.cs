@@ -18,6 +18,7 @@ namespace PS2.Utilities
         const int KEYEVENTF_EXTENDEDKEY = 0x1;
         const int KEYEVENTF_KEYUP = 0x2;
 
+        #region import WinAPI
         [DllImport("user32.dll")]
         private static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
 
@@ -28,7 +29,7 @@ namespace PS2.Utilities
 
         [DllImport("user32.dll")]
         static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
+        #endregion
         public void RunProcess(Account acc, Settings settings)
         {
             var clientToRun = GetClientPath(acc, settings);
@@ -49,6 +50,7 @@ namespace PS2.Utilities
             IntPtr hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
             while (hWnd == IntPtr.Zero)
             {
+                //TODO infinity loop in case client closed before inputCreds (
                 Thread.Sleep(1000);
                 hWnd = FindWindow("L2UnrealWWindowsViewportWindow", acc.Name + " Lineage II");
             }
@@ -79,13 +81,6 @@ namespace PS2.Utilities
                 keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
                 keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, (UIntPtr)0);
             }
-            /*if (SetForegroundWindow(handle))
-              {
-                  SendKeys.SendWait("{HOME}");
-                  SendKeys.SendWait("+{END}");
-                  SendKeys.SendWait("{BACKSPACE}");
-                  Thread.Sleep(200);
-              }*/
 
             foreach (char ch in acc.GameAccount.ToCharArray())
             {

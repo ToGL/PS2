@@ -50,7 +50,6 @@ namespace PS2
             this.loadFromClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitterToolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runBULKToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.pM20ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,8 +184,7 @@ namespace PS2
             this.copyToClipboardToolStripMenuItem,
             this.loadFromClipboardToolStripMenuItem,
             this.splitterToolStripMenuItem1,
-            this.runToolStripMenuItem,
-            this.runBULKToolStripMenuItem});
+            this.runToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
             // 
@@ -244,15 +242,8 @@ namespace PS2
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
             this.runToolStripMenuItem.Click += new System.EventHandler(this.RunToolStripMenuItem_Click);
             // 
-            // runBULKToolStripMenuItem
-            // 
-            resources.ApplyResources(this.runBULKToolStripMenuItem, "runBULKToolStripMenuItem");
-            this.runBULKToolStripMenuItem.Name = "runBULKToolStripMenuItem";
-            this.runBULKToolStripMenuItem.Click += new System.EventHandler(this.RunBULKToolStripMenuItem_Click);
-            // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pM20ToolStripMenuItem,
@@ -347,8 +338,8 @@ namespace PS2
             // 
             // langComBox
             // 
-            this.langComBox.FormattingEnabled = true;
             resources.ApplyResources(this.langComBox, "langComBox");
+            this.langComBox.FormattingEnabled = true;
             this.langComBox.Name = "langComBox";
             this.langComBox.SelectionChangeCommitted += new System.EventHandler(this.LangComBox_SelectionChangeCommitted);
             // 
@@ -405,7 +396,6 @@ namespace PS2
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator splitterToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem runBULKToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator splitterToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadFromClipboardToolStripMenuItem;
