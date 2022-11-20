@@ -132,27 +132,12 @@
   <data name="olvColumndescription.Text" xml:space="preserve">
     <value>Описание</value>
   </data>
+  <data name="olvColumnSound.Text" xml:space="preserve">
+    <value>Без Звука</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="contextMenuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>284, 224</value>
-  </data>
-  <data name="objectListView1.EmptyListMsg" xml:space="preserve">
-    <value>Вы еще не добавили аккаунты или не загрузили файл с аккаунтами</value>
-  </data>
-  <data name="objectListView1.MenuLabelGroupBy" xml:space="preserve">
-    <value>Группировать по '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelSortAscending" xml:space="preserve">
-    <value>По возрастанию '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelSortDescending" xml:space="preserve">
-    <value>По убыванию '{0}'</value>
-  </data>
-  <data name="objectListView1.MenuLabelTurnOffGroups" xml:space="preserve">
-    <value>выключить группироку</value>
-  </data>
-  <data name="objectListView1.MenuLabelUnsort" xml:space="preserve">
-    <value>Вернуть порядок из Файла</value>
+    <value>284, 198</value>
   </data>
   <data name="addNewToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>283, 26</value>
@@ -201,12 +186,6 @@
   </data>
   <data name="runToolStripMenuItem.Text" xml:space="preserve">
     <value>Запустить</value>
-  </data>
-  <data name="runBULKToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>283, 26</value>
-  </data>
-  <data name="runBULKToolStripMenuItem.Text" xml:space="preserve">
-    <value>Запустить несколько</value>
   </data>
   <data name="aboutToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>187, 26</value>

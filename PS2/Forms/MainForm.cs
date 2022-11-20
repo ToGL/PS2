@@ -70,23 +70,7 @@ namespace PS2
             var addEdit = new AddEditForm(_accounts);
             addEdit.ShowDialog();
 
-            foreach (var acc in addEdit.EditAccounts)
-            {
-                var index = _accounts.FindIndex(x => x.GameAccount == acc.GameAccount);
-                if (index > -1)
-                {
-                    _accounts[index] = acc;
-                    accountsListView.UpdateObject(acc);
-                }
-                else
-                {
-                    _accounts.Add(acc);
-                    accountsListView.AddObject(acc);
-                }
-            }
-
-            accountsListView.RefreshObjects(_accounts);
-            accountsListView.SelectObjects(addEdit.EditAccounts);
+            UpdateView(addEdit.EditAccounts);
             addEdit.EditAccounts.Clear();
         }
 
@@ -102,16 +86,7 @@ namespace PS2
             var addEdit = new AddEditForm(_accounts, tmpAcc);
             addEdit.ShowDialog();
 
-            foreach (var acc in addEdit.EditAccounts)
-            {
-                var index = _accounts.FindIndex(x => x.GameAccount == acc.GameAccount);
-                if (index > -1)
-                {
-                    _accounts[index] = acc;
-                }
-            }
-            accountsListView.SetObjects(_accounts);
-            accountsListView.RefreshObjects(_accounts);
+            UpdateView(addEdit.EditAccounts);
             addEdit.EditAccounts.Clear();
         }
 
@@ -215,7 +190,6 @@ namespace PS2
 
         private void AccountsListView_CellRightClick(object sender, CellRightClickEventArgs e)
         {
-            runBULKToolStripMenuItem.Enabled = accountsListView.SelectedItems.Count >= 2 && IsClientSet;
             runToolStripMenuItem.Enabled = accountsListView.Items.Count > 0 && IsClientSet;
 
             useAlternativeClientToolStripMenuItem.Enabled = accountsListView.SelectedObjects.Count < 2;
@@ -350,18 +324,7 @@ namespace PS2
             }
             var toAdd = _jsonFileUtility.ReadFile<List<Account>>(Consts.CredsPath);
 
-            foreach (Account acc in toAdd)
-            {
-                if (_accounts.Contains(acc))
-                {
-                    _accounts.Remove(acc);
-                }
-                _accounts.Add(acc);
-                accountsListView.UpdateObject(acc);
-            }
-
-            accountsListView.RefreshObjects(_accounts);
-            accountsListView.SelectObjects(toAdd);
+            UpdateView(toAdd);
         }
 
         private void PsMMainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -395,6 +358,7 @@ namespace PS2
             accountsListView.ModelFilter = TextMatchFilter.Contains(accountsListView, searchTextBox.Text);
         }
 
+        #region ONeCall functions
         private void AddToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddNewAccountViaForm();
@@ -433,11 +397,7 @@ namespace PS2
         {
             RunClient();
         }
-
-        private void RunBULKToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RunClient();
-        }
+        #endregion
 
         private void AccountsListView_KeyUp(object sender, KeyEventArgs e)
         {
