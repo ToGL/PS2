@@ -174,7 +174,7 @@
     <value>2</value>
   </data>
   <data name="olvColumnSound.Text" xml:space="preserve">
-    <value>Mute</value>
+    <value>Sound</value>
   </data>
   <data name="olvColumnSound.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
