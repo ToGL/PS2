@@ -41,6 +41,7 @@ namespace PS2
                 CanDropOnItem = false
             };
             accountsListView.DragSource = new SimpleDragSource(true);
+            accountsListView.AlwaysGroupByColumn = accountsListView.Columns[2] as OLVColumn;
         }
 
         private void PsMMainForm_Load(object sender, EventArgs e)
