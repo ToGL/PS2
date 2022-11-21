@@ -106,6 +106,7 @@ namespace PS2
             this.accountsListView.UseNotifyPropertyChanged = true;
             this.accountsListView.View = System.Windows.Forms.View.Details;
             this.accountsListView.CellRightClick += new System.EventHandler<BrightIdeasSoftware.CellRightClickEventArgs>(this.AccountsListView_CellRightClick);
+            this.accountsListView.Dropped += new System.EventHandler<BrightIdeasSoftware.OlvDropEventArgs>(this.AccountsListView_Dropped);
             this.accountsListView.DoubleClick += new System.EventHandler(this.AccountsListView_DoubleClick);
             this.accountsListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AccountsListView_KeyUp);
             // 
@@ -244,6 +245,7 @@ namespace PS2
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.pM20ToolStripMenuItem,

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -16,7 +17,7 @@ namespace PS2
         private readonly ProcessUtility _processUtility = new ProcessUtility();
         private readonly CsvReaderUtility _csvReaderUtility = new CsvReaderUtility();
 
-        private readonly List<Account> _accounts = new List<Account>();
+        private List<Account> _accounts = new List<Account>();
         private Settings _settings = new Settings();
 
         public bool IsClientSet
@@ -31,8 +32,15 @@ namespace PS2
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
                 Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             }
-
             InitializeComponent();
+
+            accountsListView.DropSink = new RearrangingDropSink
+            {
+                CanDropBetween = true,
+                CanDropOnBackground = false,
+                CanDropOnItem = false
+            };
+            accountsListView.DragSource = new SimpleDragSource(true);
         }
 
         private void PsMMainForm_Load(object sender, EventArgs e)
@@ -180,6 +188,8 @@ namespace PS2
             accountsListView.SetObjects(_accounts);
             accountsListView.RefreshObjects(_accounts);
             accountsListView.SelectObjects(newAccounts);
+
+            _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
         }
 
         private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -327,17 +337,6 @@ namespace PS2
             UpdateView(toAdd);
         }
 
-        private void PsMMainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _settings.ListState = accountsListView.SaveState();
-            _jsonFileUtility.SaveFile(Consts.SettingsPath, _settings);
-
-            if (_accounts.Count > 0)
-            {
-                _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
-            }
-        }
-
         private void PsMMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.Language = langComBox.SelectedValue.ToString();
@@ -404,6 +403,23 @@ namespace PS2
             if (e.KeyCode == Keys.Enter)
             {
                 RunClient();
+            }
+        }
+
+        private void AccountsListView_Dropped(object sender, OlvDropEventArgs e)
+        {
+            _accounts = accountsListView.Objects.Cast<Account>().ToList();
+            _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
+        }
+
+        private void PsMMainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _settings.ListState = accountsListView.SaveState();
+            _jsonFileUtility.SaveFile(Consts.SettingsPath, _settings);
+
+            if (_accounts.Count > 0)
+            {
+                _jsonFileUtility.SaveFile(Consts.CredsPath, _accounts);
             }
         }
     }
