@@ -19,7 +19,7 @@ namespace PS2.Utilities
         {
             using (var file = new StreamWriter(path))
             {
-                file.Write(JsonConvert.SerializeObject(data));
+                file.Write(GetJsonString(data));
             }
         }
 
@@ -27,6 +27,7 @@ namespace PS2.Utilities
         {
             return JsonConvert.SerializeObject(data);
         }
+
         public T GetObjectFromJsonString<T>(string jsonString)
         {
             try
@@ -35,7 +36,7 @@ namespace PS2.Utilities
             }
             catch (JsonReaderException e)
             {
-                System.Windows.Forms.MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return default;
         }

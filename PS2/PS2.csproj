@@ -115,6 +115,7 @@
     <Compile Include="Utilities\JsonFileUtility.cs" />
     <Compile Include="Utilities\ProcessUtility.cs" />
     <Compile Include="Utilities\VolumeMixer.cs" />
+    <Compile Include="Validators\StringValidator.cs" />
     <EmbeddedResource Include="Forms\AddEditForm.resx">
       <DependentUpon>AddEditForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -129,6 +130,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options.ru.resx">
       <DependentUpon>Options.cs</DependentUpon>

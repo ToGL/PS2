@@ -1,13 +1,14 @@
-﻿using System;
+﻿using PS2.Validators;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace PS2
 {
     public partial class AddEditForm : Form
     {
+        private readonly IStringValidator _stringValidator = new StringValidator();
         private readonly List<Account> _accounts;
 
         public List<Account> EditAccounts = new List<Account>();
@@ -128,14 +129,7 @@ namespace PS2
 
         private void GameLoginTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(GameLoginTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
-            {
-                MessageBox.Show(Strings.engInputOnly, "info");
-                AddEditForm addEditForm = this;
-                addEditForm.GameLoginTextBox.Text = "";
-                addEditForm.GameLoginTextBox.Focus();
-            }
-            RollbackInputToOrigin();
+            TextBox_Leave(GameLoginTextBox);
         }
 
         private void GamePasswordTextBox_Enter(object sender, EventArgs e)
@@ -145,11 +139,16 @@ namespace PS2
 
         private void GamePasswordTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(GamePasswordTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
+            TextBox_Leave(GamePasswordTextBox);
+        }
+
+        private void TextBox_Leave(TextBox textBox)
+        {
+            if (!_stringValidator.Validate(textBox.Text))
             {
                 MessageBox.Show(Strings.engInputOnly, "info");
-                GamePasswordTextBox.Text = "";
-                GamePasswordTextBox.Focus();
+                textBox.Text = "";
+                textBox.Focus();
             }
 
             RollbackInputToOrigin();
@@ -170,6 +169,7 @@ namespace PS2
             _original = InputLanguage.CurrentInputLanguage;
             Application.CurrentInputLanguage = InputLanguage.FromCulture(new CultureInfo("en-us"));
         }
+
         private void RollbackInputToOrigin()
         {
             InputLanguage.CurrentInputLanguage = _original;
@@ -182,19 +182,13 @@ namespace PS2
 
         private void DisplayNameTextBox_Leave(object sender, EventArgs e)
         {
-            if (!Regex.IsMatch(DisplayNameTextBox.Text, "^[a-zA-Z0-9!@#$&()_-]*$"))
-            {
-                MessageBox.Show(Strings.engInputOnly, "info");
-                DisplayNameTextBox.Text = "";
-                DisplayNameTextBox.Focus();
-            }
-            RollbackInputToOrigin();
+            TextBox_Leave(DisplayNameTextBox);
         }
 
         private void AddEditForm_Load(object sender, EventArgs e)
         {
             _groupsList = GetGroupsList();
-            AutoCompleteStringCollection col = new AutoCompleteStringCollection();
+            var col = new AutoCompleteStringCollection();
             foreach (string group in _groupsList)
             {
                 col.Add(group);
